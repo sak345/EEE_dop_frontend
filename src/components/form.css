@@ -1,0 +1,107 @@
+form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin:  auto;
+    margin-bottom: 15px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  label {
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"],
+  select {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button[type="submit"] {
+    color: #9ca2ad;
+    background-color: #01182d;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  button[type="submit"]:hover {
+    color: #01182d;
+    background-color: #ccc;
+  }
+
+  .form-entry {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.form-entry h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.form-entry p {
+  margin-bottom: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #ccc;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+
+td:nth-child(4),
+td:nth-child(7)
+{
+  font-weight: bold;
+}
+
+td:nth-child(10) {
+  font-weight: bold;
+  text-transform:capitalize;
+}
+
+td:nth-child(10)[data-Status ="Accepted"] {
+  color: green;
+}
+
+td:nth-child(10)[data-status="Rejected"] {
+  color: red;
+}
+
+td:nth-child(10)[data-status="Submitted"] {
+  color: blue;
+}
+
+@media only screen and (max-width: 600px) {
+  table {
+    font-size: 12px;
+  }
+}

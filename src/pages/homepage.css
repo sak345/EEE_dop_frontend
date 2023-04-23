@@ -1,0 +1,29 @@
+ .button {
+
+    background-color: #01182d;
+    color: #9ca2ad;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+
+ } 
+  
+  .button.home { 
+    width: 250px;
+    height: 250px;
+    border-radius: 5;
+    margin: 15px;
+    float: left;
+    padding: 10px 20px;
+    font-size: 20px;
+  }
+  
+  .button.nav {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+ 
+  .button:hover {
+    color: #01182d;
+    background-color: #ccc;
+  }

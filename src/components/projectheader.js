@@ -1,25 +1,29 @@
+import React from 'react';
 import { NavLink } from "react-router-dom";
+import styles from '../styles';
+import './projectheader.css';
+
 
 function ProjectHeader() {
     return (
+        <header >
+            <h1 style={styles.pageTitle}>Projects</h1>
 
-        <header>
-            <h1>Project Page</h1>
-            <nav>
-                <ul>
-                    <li>
-                        <NavLink to="/submittedproject"><button>Submitted Projects</button></NavLink>
+            <nav style={styles.nav}>
+                <ul style={styles.navContainer}>
+                    <li style={styles.firstChild}>
+                        <NavLink to="/submittedproject"><button className="button nav">Submitted Projects</button></NavLink>
                     </li>
                     <li>
-                        <NavLink to="/ongoingproject"><button>Ongoing Projects</button></NavLink>
+                        <NavLink to="/ongoingproject"><button className="button nav">Ongoing Projects</button></NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/completedproject"><button>Completed Projects</button></NavLink>
+                    <li style={styles.lastChild}>
+                        <NavLink to="/completedproject"><button className="button nav">Completed Projects</button></NavLink>
                     </li>
                 </ul>
+            
             </nav>
         </header>
-
     );
   }
   
