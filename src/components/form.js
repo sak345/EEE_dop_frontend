@@ -193,6 +193,7 @@
 // // };
 // export default Inputform;
 import React, { useState } from "react";
+import axios from 'axios';
 import "./form.css";
 
 function Form() {
@@ -221,6 +222,7 @@ function Form() {
       duration,
       projectStatus
     };
+
     setFormData([...formData, newFormData]);
     setFundingAgency("");
     setOrg("");
@@ -231,6 +233,36 @@ function Form() {
     setSubmissionDate("");
     setDuration("");
     setProjectStatus("");
+    
+    var myHeaders = new Headers();
+myHeaders.append("Authorization", localStorage.getItem("Token"));
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "title": newFormData.title,
+  "agency_type": newFormData.org,
+  "funding_agency": newFormData.fundingAgency,
+  "PI": newFormData.pi,
+  "submission_date": newFormData.submissionDate,
+  "coPI": newFormData.coPi,
+  "amount": newFormData.amount,
+  "end_date": newFormData.duration,
+  "status_p": newFormData.projectStatus
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch(process.env.REACT_APP_BACKEND_URL+"paper/create", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
   };
 
   return (
@@ -253,9 +285,9 @@ function Form() {
           onChange={(e) => setOrg(e.target.value)}
         >
           <option value="">--Please choose an organization--</option>
-          <option value="government">Government</option>
-          <option value="private">Private</option>
-          <option value="international">International</option>
+          <option value="Government">Government</option>
+          <option value="Private">Private</option>
+          <option value="International">International</option>
         </select>
 
         <label htmlFor="title">Title:</label>

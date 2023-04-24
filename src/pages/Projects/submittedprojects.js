@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Inputform from '../../components/form';
 import PopUpButton from '../../components/popup';
 import Navbar from '../../components/navbar';
 import ProjectHeader from '../../components/projectheader';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import axios from 'axios';
 
 const { Header, Content, Footer } = Layout;
 
 function SubmittedProjectsPage() {
+
   return (
     <div>
        <Navbar/>
@@ -19,7 +21,6 @@ function SubmittedProjectsPage() {
         <Inputform/>  
         </div>
       </Content>
-
            
     </div>
   );
