@@ -303,18 +303,22 @@ function Form() {
 
     //setProjectStatus(value)
     // Send PATCH request to server with _id and selected option
+    let data = JSON.stringify({
+      "_id": id,
+      "status_p": value
+    });
+
+
     try {
       //? api patch req
       let config = {
         method: 'patch',
         url: process.env.REACT_APP_BACKEND_URL+'paper/update',
         headers: { 
-          'Authorization': localStorage.getItem('Token')
+          'Authorization': localStorage.getItem('Token'),
+          'Content-Type': 'application/json'
         },
-        body: {
-          _id: id,
-          status_p: value,
-        }
+        data: data
       };
 
       axios.request(config)
