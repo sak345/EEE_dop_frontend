@@ -331,7 +331,7 @@ function Form() {
         }
         window.location.reload(); // Reload the page after successful request
       })
-      .catch((error) => {
+      .catch((error) => {``
         console.log(error);
       });
 
