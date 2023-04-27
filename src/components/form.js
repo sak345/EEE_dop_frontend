@@ -196,6 +196,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./form.css";
 
+
+
+
 function Form() {
   const [fundingAgency, setFundingAgency] = useState("");
   const [org, setOrg] = useState("");
@@ -207,6 +210,8 @@ function Form() {
   const [endDate, setEndDate] = useState("");
   const [projectStatus, setProjectStatus] = useState("");
   const [formData, setFormData] = useState([]);
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   //? FOR PROJECTS RECIEVED FROM get request
   const [data, setData] = useState([]);
@@ -266,29 +271,70 @@ function Form() {
       })
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
+
+    setFormSubmitted(!formSubmitted);
   };
+
   //? get all projects
   useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: process.env.REACT_APP_BACKEND_URL + "paper/getall",
-      headers: {
-        Authorization: localStorage.getItem("Token"),
-      },
-    };
+      
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: process.env.REACT_APP_BACKEND_URL + "paper/getall",
+        headers: {
+          Authorization: localStorage.getItem("Token"),
+        },
+      };
 
-    axios
-      .request(config)
-      .then((response) => {
+      axios
+        .request(config)
+        .then((response) => {
+          setData(response.data.papers);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    
+  }, [formSubmitted]);
+
+
+  const handleOptionChange = (id, value) => {
+
+    //setProjectStatus(value)
+    // Send PATCH request to server with _id and selected option
+    try {
+      //? api patch req
+      let config = {
+        method: 'patch',
+        url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+        headers: { 
+          'Authorization': localStorage.getItem('Token')
+        },
+        body: {
+          _id: id,
+          status_p: value,
+        }
+      };
+
+      axios.request(config)
+        .then((response) => {
         // console.log(JSON.stringify(response.data));
-        setData(response.data.papers);
-        // console.log(response.data.papers);
+        // setData(response.data.papers)
+        // console.log(response.data.papers)
+        if(response.status == 200) {
+          console.log("updated successfully")
+        }
+        window.location.reload(); // Reload the page after successful request
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -398,7 +444,9 @@ function Form() {
             <th>Amount</th>
             <th>Submission Date</th>
             <th>End Date</th>
-            <th>Status</th>
+            <th>Approval Status</th>
+            <th>Edit Status</th>
+            <th>Delete </th>
           </tr>
         </thead>
         <tbody>
@@ -414,6 +462,14 @@ function Form() {
               <td>{data.submission_date}</td>
               <td>{data.duration}</td>
               <td>{data.status_p}</td>
+              <td>{data._id}</td>
+              <td><select class="form-control edit-status-select" data-id="1" onChange={(e) => handleOptionChange(data._id, e.target.value)} >
+            
+                 <option value="accepted">Accepted</option>
+                 <option value="rejected">Rejected</option>
+                 <option value="submitted">Submitted</option>
+                </select>
+              </td>
             </tr>
           ))}
         </tbody>

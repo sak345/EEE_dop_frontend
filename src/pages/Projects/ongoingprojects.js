@@ -56,6 +56,12 @@ function OngoingProjectsPage() {
                 <th>Submission Date</th>
                 <th>Duration</th>
                 <th>Status</th>
+                {/* <th>Start Date</th>
+                <th>Completed Date</th>
+                <th>Current Status</th>
+                <th>End Date</th> */}
+
+
               </tr>
             </thead>
             <tbody>
@@ -73,6 +79,11 @@ function OngoingProjectsPage() {
                       <td>{data.submission_date}</td>
                       <td>{data.duration}</td>
                       <td>{data.status_p}</td>
+                      {/* <td>{data.start_date}</td>
+                      <td>{data.completed_date}</td>
+                      <td>{data.status_c}</td>
+                      <td>{data.end_date}</td> */}
+
                     </tr>
                   );
                 } else {

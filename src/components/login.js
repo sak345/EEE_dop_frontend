@@ -23,6 +23,7 @@ function LogIn() {
                             .post(process.env.REACT_APP_BACKEND_URL+"auth/login", {
                                 email: res.data.email
                             })
+                        console.log(res.data.email);
                     })
                     .then((res) => {
                         localStorage.setItem("Token", 'Bearer ' + res.data.token); 
