@@ -27,7 +27,7 @@ function App() {
 
     <Route path="/submittedproject" element={<PrivateRoute><SubmittedProjectsPage/></PrivateRoute>} />
     <Route path="/ongoingproject" element={<PrivateRoute><OngoingProjectsPage/></PrivateRoute>} />
-    <Route path="/completedproject" element={<PrivateRoute><OngoingProjectsPage/></PrivateRoute>} />
+    <Route path="/completedproject" element={<PrivateRoute><CompletedProjectsPage/></PrivateRoute>} />
 
 
     <Route path="/a" element={<APage/>} />

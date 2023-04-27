@@ -1,5 +1,4 @@
-
- import { DatePicker } from 'antd';
+//  import { DatePicker } from 'antd';
 // import { useState } from 'react';
 // const { Option } = Select;
 // const Inputform = () => {
@@ -16,9 +15,9 @@
 //   const getFields = () => {
 //     const count = expand ? 10 : 6;
 //     const children = [];
-    
+
 //       children.push(
-        
+
 //         <Col span={9} >
 //         <Form.Item
 //           name={`Funding Agency`}
@@ -30,7 +29,7 @@
 //             },
 //           ]}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
@@ -47,7 +46,7 @@
 //               <Option value="1">Government </Option>
 //               <Option value="2">Private</Option>
 //               <Option value="2">International</Option>
-//             </Select>  
+//             </Select>
 //         </Form.Item>
 
 //         <Form.Item
@@ -60,7 +59,7 @@
 //             },
 //           ]}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
@@ -73,14 +72,14 @@
 //             },
 //           ]}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
 //           name={`Co-PI`}
 //           label={`Co-PI`}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
@@ -93,7 +92,7 @@
 //               },
 //             ]}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
@@ -106,7 +105,7 @@
 //               },
 //             ]}
 //         >
-//             <DatePicker/> 
+//             <DatePicker/>
 //         </Form.Item>
 
 //         <Form.Item
@@ -119,7 +118,7 @@
 //               },
 //             ]}
 //         >
-//             <Input placeholder="placeholder" />  
+//             <Input placeholder="placeholder" />
 //         </Form.Item>
 
 //         <Form.Item
@@ -131,13 +130,13 @@
 //                 message: 'This Field is required!',
 //               },
 //             ]}
-//         >  
+//         >
 //             <Select placeholder="Select from dropmenu">
 //               <Option value="1">Accepted </Option>
 //               <Option value="2">Rejected</Option>
 //               <Option value="2">Submitted</Option>
-//             </Select> 
-//         </Form.Item>        
+//             </Select>
+//         </Form.Item>
 //       </Col>,
 //       );
 //     return children;
@@ -169,7 +168,7 @@
 //           >
 //             Clear
 //           </Button>
-          
+
 //         </Col>
 //       </Row>
 //     </Form>
@@ -192,12 +191,12 @@
 // //   );
 // // };
 // export default Inputform;
-import React, { useState } from "react";
-import axios from 'axios';
+// import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./form.css";
 
 function Form() {
-  
   const [fundingAgency, setFundingAgency] = useState("");
   const [org, setOrg] = useState("");
   const [title, setTitle] = useState("");
@@ -205,9 +204,12 @@ function Form() {
   const [coPi, setCoPi] = useState("");
   const [amount, setAmount] = useState("");
   const [submissionDate, setSubmissionDate] = useState("");
-  const [duration, setDuration] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [projectStatus, setProjectStatus] = useState("");
   const [formData, setFormData] = useState([]);
+
+  //? FOR PROJECTS RECIEVED FROM get request
+  const [data, setData] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -219,8 +221,8 @@ function Form() {
       coPi,
       amount,
       submissionDate,
-      duration,
-      projectStatus
+      endDate,
+      projectStatus,
     };
 
     setFormData([...formData, newFormData]);
@@ -231,44 +233,67 @@ function Form() {
     setCoPi("");
     setAmount("");
     setSubmissionDate("");
-    setDuration("");
+    setEndDate("");
     setProjectStatus("");
-    
+
     var myHeaders = new Headers();
-myHeaders.append("Authorization", localStorage.getItem("Token"));
-myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", localStorage.getItem("Token"));
+    myHeaders.append("Content-Type", "application/json");
 
-var raw = JSON.stringify({
-  "title": newFormData.title,
-  "agency_type": newFormData.org,
-  "funding_agency": newFormData.fundingAgency,
-  "PI": newFormData.pi,
-  "submission_date": newFormData.submissionDate,
-  "coPI": newFormData.coPi,
-  "amount": newFormData.amount,
-  "end_date": newFormData.duration,
-  "status_p": newFormData.projectStatus
-});
+    var raw = JSON.stringify({
+      title: newFormData.title,
+      agency_type: newFormData.org,
+      funding_agency: newFormData.fundingAgency,
+      PI: newFormData.pi,
+      submission_date: newFormData.submissionDate,
+      coPI: newFormData.coPi,
+      amount: newFormData.amount,
+      end_date: newFormData.endDate,
+      status_p: newFormData.projectStatus,
+    });
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-fetch(process.env.REACT_APP_BACKEND_URL+"paper/create", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-
-
+    fetch(process.env.REACT_APP_BACKEND_URL + "paper/create", requestOptions)
+      .then((response) => {
+        console.log(response.body);
+        response.text();
+      })
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
   };
+  //? get all projects
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: process.env.REACT_APP_BACKEND_URL + "paper/getall",
+      headers: {
+        Authorization: localStorage.getItem("Token"),
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        setData(response.data.papers);
+        // console.log(response.data.papers);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-      <label htmlFor="fundingAgency">Funding Agency:</label>
+        <label htmlFor="fundingAgency">Funding Agency:</label>
         <input
           type="text"
           id="fundingAgency"
@@ -327,20 +352,20 @@ fetch(process.env.REACT_APP_BACKEND_URL+"paper/create", requestOptions)
 
         <label htmlFor="submissionDate">Submission Date:</label>
         <input
-          type="text"
+          type='date'
           id="submissionDate"
           required
           value={submissionDate}
           onChange={(e) => setSubmissionDate(e.target.value)}
         />
-            {/* <DatePicker/>  */}
+        {/* <DatePicker/>  */}
 
-        <label htmlFor="duration">Duration:</label>
+        <label htmlFor="endDate">End Date:</label>
         <input
-          type="text"
-          id="duration"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+          type="date"
+          id="endDate"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
         />
 
         <label htmlFor="projectstatus">Select Status:</label>
@@ -350,7 +375,9 @@ fetch(process.env.REACT_APP_BACKEND_URL+"paper/create", requestOptions)
           value={projectStatus}
           onChange={(e) => setProjectStatus(e.target.value)}
         >
-          <option value="">--Please select the current status of the project--</option>
+          <option value="">
+            --Please select the current status of the project--
+          </option>
           <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
           <option value="submitted">Submitted</option>
@@ -360,39 +387,37 @@ fetch(process.env.REACT_APP_BACKEND_URL+"paper/create", requestOptions)
       </form>
 
       <table>
-  <thead>
-    <tr>
-      <th>S. No</th>
-      <th>Funding Agency</th>
-      <th>Organization</th>
-      <th>Title</th>
-      <th>PI</th>
-      <th>Co-PI</th>
-      <th>Amount</th>
-      <th>Submission Date</th>
-      <th>Duration</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {formData.map((data, index) => (
-      <tr key={index}>
-        <td>{index+1}</td>
-        <td>{data.fundingAgency}</td>
-        <td>{data.org}</td>
-        <td>{data.title}</td>
-        <td>{data.pi}</td>
-        <td>{data.coPi}</td>
-        <td>{data.amount}</td>
-        <td>{data.submissionDate}</td>
-        <td>{data.duration}</td>
-        <td>{data.projectStatus}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-      
+        <thead>
+          <tr>
+            <th>S. No</th>
+            <th>Funding Agency</th>
+            <th>Organization</th>
+            <th>Title</th>
+            <th>PI</th>
+            <th>Co-PI</th>
+            <th>Amount</th>
+            <th>Submission Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((data, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{data.funding_agency}</td>
+              <td>{data.agency_type}</td>
+              <td>{data.title}</td>
+              <td>{data.PI}</td>
+              <td>{data.coPI}</td>
+              <td>{data.amount}</td>
+              <td>{data.submission_date}</td>
+              <td>{data.duration}</td>
+              <td>{data.status_p}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
