@@ -156,7 +156,7 @@ function ProjectPage() {
                  <option value="submitted">Submitted</option>
                 </select>
               </td>
-              <td><button onClick={handleDelete(data._id) }>Delete</button></td>
+              <td><button onClick={() => handleDelete(data._id) }>Delete</button></td>
   
             </tr>
           ))}
