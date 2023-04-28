@@ -331,7 +331,7 @@ function Form() {
         }
         window.location.reload(); // Reload the page after successful request
       })
-      .catch((error) => {``
+      .catch((error) => {
         console.log(error);
       });
 
@@ -436,48 +436,7 @@ function Form() {
         <button type="submit">Submit</button>
       </form>
 
-      <table>
-        <thead>
-          <tr>
-            <th>S. No</th>
-            <th>Funding Agency</th>
-            <th>Organization</th>
-            <th>Title</th>
-            <th>PI</th>
-            <th>Co-PI</th>
-            <th>Amount</th>
-            <th>Submission Date</th>
-            <th>End Date</th>
-            <th>Approval Status</th>
-            <th>Edit Status</th>
-            <th>Delete </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((data, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{data.funding_agency}</td>
-              <td>{data.agency_type}</td>
-              <td>{data.title}</td>
-              <td>{data.PI}</td>
-              <td>{data.coPI}</td>
-              <td>{data.amount}</td>
-              <td>{data.submission_date}</td>
-              <td>{data.duration}</td>
-              <td>{data.status_p}</td>
-              <td>{data._id}</td>
-              <td><select class="form-control edit-status-select" data-id="1" onChange={(e) => handleOptionChange(data._id, e.target.value)} >
-            
-                 <option value="accepted">Accepted</option>
-                 <option value="rejected">Rejected</option>
-                 <option value="submitted">Submitted</option>
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      
     </div>
   );
 }

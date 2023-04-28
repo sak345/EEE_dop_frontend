@@ -12,7 +12,10 @@ function ProjectHeader() {
             <nav style={styles.nav}>
                 <ul style={styles.navContainer}>
                     <li style={styles.firstChild}>
-                        <NavLink to="/submittedproject"><button className="button nav">Submitted Projects</button></NavLink>
+                        <NavLink to="/submittedproject"><button className="button nav">Submit Project</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/project"><button className="button nav">All Projects</button></NavLink>
                     </li>
                     <li>
                         <NavLink to="/ongoingproject"><button className="button nav">Ongoing Projects</button></NavLink>

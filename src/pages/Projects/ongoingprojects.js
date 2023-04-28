@@ -41,7 +41,7 @@ function OngoingProjectsPage() {
     <div>
       <Navbar />
       <ProjectHeader />
-      <Content className="site-layout" style={{ padding: "0 50px" }}>
+      <div className="site-layout" style={{ padding: "0 50px" }}>
         <div style={{ padding: 24, minHeight: 380 }}>
           <table>
             <thead>
@@ -54,8 +54,8 @@ function OngoingProjectsPage() {
                 <th>Co-PI</th>
                 <th>Amount</th>
                 <th>Submission Date</th>
-                <th>Duration</th>
-                <th>Status</th>
+                {/* <th>Duration</th> */}
+                <th>Approval Status</th>
                 {/* <th>Start Date</th>
                 <th>Completed Date</th>
                 <th>Current Status</th>
@@ -77,7 +77,7 @@ function OngoingProjectsPage() {
                       <td>{data.coPI}</td>
                       <td>{data.amount}</td>
                       <td>{data.submission_date}</td>
-                      <td>{data.duration}</td>
+                      {/* <td>{data.duration}</td> */}
                       <td>{data.status_p}</td>
                       {/* <td>{data.start_date}</td>
                       <td>{data.completed_date}</td>
@@ -93,7 +93,7 @@ function OngoingProjectsPage() {
             </tbody>
           </table>
         </div>
-      </Content>
+      </div>
     </div>
   );
 }
