@@ -77,18 +77,13 @@ tr:hover {
 }
 
 
-td:nth-child(4),
-td:nth-child(7)
+._status
 {
   font-weight: bold;
+  text-transform:uppercase
 }
 
-td:nth-child(10) {
-  font-weight: bold;
-  text-transform:capitalize;
-}
-
-td:nth-child(10)[data-Status ="Accepted"] {
+/* td:nth-child(10)[data-Status ="Accepted"] {
   color: green;
 }
 
@@ -98,7 +93,7 @@ td:nth-child(10)[data-status="Rejected"] {
 
 td:nth-child(10)[data-status="Submitted"] {
   color: blue;
-}
+} */
 
 @media only screen and (max-width: 600px) {
   table {

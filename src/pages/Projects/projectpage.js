@@ -142,13 +142,13 @@ function ProjectPage() {
               <td>{index + 1}</td>
               <td>{data.funding_agency}</td>
               <td>{data.agency_type}</td>
-              <td>{data.title}</td>
-              <td>{data.PI}</td>
+              <td className="_status">{data.title}</td>
+              <td className="_status">{data.PI}</td>
               <td>{data.coPI}</td>
               <td>{data.amount}</td>
               <td>{data.submission_date}</td>
               <td>{data.end_date}</td>
-              <td>{data.status_p}</td>
+              <td className='_status'>{data.status_p}</td>
               <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p}  onChange={(e) => handleOptionChange(data._id, e.target.value)} >
             
                  <option value="accepted">Accepted</option>
