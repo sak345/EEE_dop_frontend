@@ -10,6 +10,46 @@ import axios from "axios";
 
 const { Header, Content, Footer } = Layout;
 
+const handleOptionChange = (id, value) => {
+
+  //setProjectStatus(value)
+  // Send PATCH request to server with _id and selected option
+  let data = JSON.stringify({
+    "_id": id,
+    "project_stage": value
+  });
+
+
+  try {
+    //? api patch req
+    let config = {
+      method: 'patch',
+      url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+      headers: { 
+        'Authorization': localStorage.getItem('Token'),
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios.request(config)
+      .then((response) => {
+      // console.log(JSON.stringify(response.data));
+      // setData(response.data.papers)
+      // console.log(response.data.papers)
+      if(response.status == 200) {
+        console.log("updated successfully")
+      }
+      // window.location.reload(); // Reload the page after successful request
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 function CompletedProjectsPage() {
 
@@ -56,18 +96,16 @@ function CompletedProjectsPage() {
                 <th>Amount</th>
                 <th>Submission Date</th>
                 {/* <th>Duration</th> */}
-                <th>Approval Status</th>
                 <th>Start Date</th>
                 <th>Completed Date</th>
-                <th>End Date</th>
                 <th>Current Status</th>
-
+                <th>Edit Status</th>
 
               </tr>
             </thead>
             <tbody>
               {data.map((data, index) => {
-                if (data.project_stage === "completed") {
+                if (data.status_p === "accepted" && data.project_stage === "completed") {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -79,12 +117,14 @@ function CompletedProjectsPage() {
                       <td>{data.amount}</td>
                       <td>{data.submission_date}</td>
                       {/* <td>{data.duration}</td> */}
-                      <td className="_status">{data.status_p}</td>
                       <td>{data.start_date}</td>
                       <td>{data.completed_date}</td>
-                      <td>{data.end_date}</td>
                       <td className="_status">{data.project_stage}</td>
-                      
+                      <td><select class="form-control edit-status-select" data-id="1"  defaultValue={data.project_stage} onChange={(e) => handleOptionChange(data._id, e.target.value)} >
+                          <option value="ongoing">Ongoing</option>
+                          <option value="completed">Completed</option>
+                          </select>
+                       </td>
 
 
                     </tr>

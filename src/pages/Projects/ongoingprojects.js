@@ -94,12 +94,14 @@ function OngoingProjectsPage() {
                 <th>Co-PI</th>
                 <th>Amount</th>
                 <th>Submission Date</th>
+                <th>Approval Date</th>
+
                 {/* <th>Duration</th> */}
-                <th>Approval Status</th>
                 <th>Start Date</th>
-                <th>Completed Date</th>
                 <th>End Date</th>
                 <th>Current Status</th>
+                <th>Edit Status</th>
+
 
 
 
@@ -107,7 +109,7 @@ function OngoingProjectsPage() {
             </thead>
             <tbody>
               {data.map((data, index) => {
-                if (data.status_p === "accepted") {
+                if (data.status_p === "accepted" && data.project_stage === "ongoing") {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -118,12 +120,11 @@ function OngoingProjectsPage() {
                       <td>{data.coPI}</td>
                       <td>{data.amount}</td>
                       <td>{data.submission_date}</td>
+                      <td>{data.approval_date}</td>
                       {/* <td>{data.duration}</td> */}
-                      <td className="_status">{data.status_p}</td>
                       <td>{data.start_date}</td>
-                      <td>{data.completed_date}</td>
                       <td>{data.end_date}</td>
-                      {/* <td>{data.project_stage}</td> */}
+                      <td className='_status'>{data.project_stage}</td>
                       <td><select class="form-control edit-status-select" data-id="1"  defaultValue={data.project_stage} onChange={(e) => handleOptionChange(data._id, e.target.value)} >
           
                           <option value="ongoing">Ongoing</option>

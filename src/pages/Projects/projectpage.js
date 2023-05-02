@@ -130,7 +130,7 @@ function ProjectPage() {
             <th>Co-PI</th>
             <th>Amount</th>
             <th>Submission Date</th>
-            <th>End Date</th>
+            <th>Approval Date</th>
             <th>Approval Status</th>
             <th>Edit Status</th>
             <th>Delete </th>
@@ -147,7 +147,8 @@ function ProjectPage() {
               <td>{data.coPI}</td>
               <td>{data.amount}</td>
               <td>{data.submission_date}</td>
-              <td>{data.end_date}</td>
+              <td>{data.approval_date}</td>
+
               <td className='_status'>{data.status_p}</td>
               <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p}  onChange={(e) => handleOptionChange(data._id, e.target.value)} >
             

@@ -207,7 +207,6 @@ function Form() {
   const [coPi, setCoPi] = useState("");
   const [amount, setAmount] = useState("");
   const [submissionDate, setSubmissionDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [projectStatus, setProjectStatus] = useState("");
   const [formData, setFormData] = useState([]);
 
@@ -226,7 +225,6 @@ function Form() {
       coPi,
       amount,
       submissionDate,
-      endDate,
       projectStatus,
     };
 
@@ -238,7 +236,6 @@ function Form() {
     setCoPi("");
     setAmount("");
     setSubmissionDate("");
-    setEndDate("");
     setProjectStatus("");
 
     var myHeaders = new Headers();
@@ -253,7 +250,6 @@ function Form() {
       submission_date: newFormData.submissionDate,
       coPI: newFormData.coPi,
       amount: newFormData.amount,
-      end_date: newFormData.endDate,
       status_p: newFormData.projectStatus,
     });
 
@@ -297,48 +293,6 @@ function Form() {
         });
     
   }, [formSubmitted]);
-
-
-  const handleOptionChange = (id, value) => {
-
-    //setProjectStatus(value)
-    // Send PATCH request to server with _id and selected option
-    let data = JSON.stringify({
-      "_id": id,
-      "status_p": value
-    });
-
-
-    try {
-      //? api patch req
-      let config = {
-        method: 'patch',
-        url: process.env.REACT_APP_BACKEND_URL+'paper/update',
-        headers: { 
-          'Authorization': localStorage.getItem('Token'),
-          'Content-Type': 'application/json'
-        },
-        data: data
-      };
-
-      axios.request(config)
-        .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        // setData(response.data.papers)
-        // console.log(response.data.papers)
-        if(response.status == 200) {
-          console.log("updated successfully")
-        }
-        window.location.reload(); // Reload the page after successful request
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <div>
@@ -409,14 +363,6 @@ function Form() {
           onChange={(e) => setSubmissionDate(e.target.value)}
         />
         {/* <DatePicker/>  */}
-
-        <label htmlFor="endDate">End Date:</label>
-        <input
-          type="date"
-          id="endDate"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
 
         <label htmlFor="projectstatus">Select Status:</label>
         <select
