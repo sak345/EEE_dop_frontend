@@ -10,50 +10,99 @@ import axios from "axios";
 
 const { Header, Content, Footer } = Layout;
 
+// const handleOptionChange = (id, value) => {
+
+//   //setProjectStatus(value)
+//   // Send PATCH request to server with _id and selected option
+//   let data = JSON.stringify({
+//     "_id": id,
+//     "status_p": value
+//   });
+
+
+//   try {
+//     //? api patch req
+//     let config = {
+//       method: 'patch',
+//       url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+//       headers: { 
+//         'Authorization': localStorage.getItem('Token'),
+//         'Content-Type': 'application/json'
+//       },
+//       data: data
+//     };
+
+//     axios.request(config)
+//       .then((response) => {
+//       // console.log(JSON.stringify(response.data));
+//       // setData(response.data.papers)
+//       // console.log(response.data.papers)
+//       if(response.status == 200) {
+//         console.log("updated successfully")
+//       }
+//       // window.location.reload(); // Reload the page after successful request
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
 const handleOptionChange = (id, value) => {
+  if(value === "accepted" ){
+    value = "ongoing";
+  }
 
-  //setProjectStatus(value)
-  // Send PATCH request to server with _id and selected option
-  let data = JSON.stringify({
-    "_id": id,
-    "project_stage": value
-  });
-
-
-  try {
-    //? api patch req
-    let config = {
-      method: 'patch',
-      url: process.env.REACT_APP_BACKEND_URL+'paper/update',
-      headers: { 
-        'Authorization': localStorage.getItem('Token'),
-        'Content-Type': 'application/json'
-      },
-      data: data
-    };
-
-    axios.request(config)
-      .then((response) => {
-      // console.log(JSON.stringify(response.data));
-      // setData(response.data.papers)
-      // console.log(response.data.papers)
-      if(response.status == 200) {
-        console.log("updated successfully")
-      }
-      // window.location.reload(); // Reload the page after successful request
-    })
-    .catch((error) => {
-      console.log(error);
+  if(value!==""){
+    //setProjectStatus(value)
+    // Send PATCH request to server with _id and selected option
+    let data = JSON.stringify({
+      "_id": id,
+      "status_p": value
     });
 
-  } catch (err) {
-    console.error(err);
+
+    try {
+      //? api patch req
+      let config = {
+        method: 'patch',
+        url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+        headers: { 
+          'Authorization': localStorage.getItem('Token'),
+          'Content-Type': 'application/json'
+        },
+        data: data
+      };
+
+      axios.request(config)
+        .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        // setData(response.data.papers)
+        // console.log(response.data.papers)
+        if(response.status == 200) {
+          console.log("updated successfully")
+        }
+        window.location.reload(); // Reload the page after successful request
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
   }
 };
+
 
 function CompletedProjectsPage() {
 
   const [data, setData] = useState([]);
+  const [projectstatus, setProjectStatus] = useState("");
+
 
   useEffect(() => {
     let config = {
@@ -95,17 +144,21 @@ function CompletedProjectsPage() {
                 <th>Co-PI</th>
                 <th>Amount</th>
                 <th>Submission Date</th>
+                <th>Approval Date</th>
+
                 {/* <th>Duration</th> */}
                 <th>Start Date</th>
                 <th>Completed Date</th>
                 <th>Current Status</th>
                 <th>Edit Status</th>
+                <th>Update</th>
+
 
               </tr>
             </thead>
             <tbody>
               {data.map((data, index) => {
-                if (data.status_p === "accepted" && data.project_stage === "completed") {
+                if (data.status_p === "completed") {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -116,15 +169,18 @@ function CompletedProjectsPage() {
                       <td>{data.coPI}</td>
                       <td>{data.amount}</td>
                       <td>{data.submission_date}</td>
-                      {/* <td>{data.duration}</td> */}
+                      <td>{data.approval_date}</td>
                       <td>{data.start_date}</td>
                       <td>{data.completed_date}</td>
-                      <td className="_status">{data.project_stage}</td>
-                      <td><select class="form-control edit-status-select" data-id="1"  defaultValue={data.project_stage} onChange={(e) => handleOptionChange(data._id, e.target.value)} >
+                      <td className="_status">{data.status_p}</td>
+                      <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                           <option value="ongoing">Ongoing</option>
                           <option value="completed">Completed</option>
+                          <option value="rejected">Rejected</option>
+                          <option value="submitted">Submitted</option>
                           </select>
                        </td>
+                       <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
 
 
                     </tr>

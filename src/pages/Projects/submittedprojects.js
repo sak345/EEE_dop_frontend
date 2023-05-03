@@ -1,27 +1,290 @@
-import React, {useState, useEffect} from 'react';
-import Inputform from '../../components/form';
-import PopUpButton from '../../components/popup';
-import Navbar from '../../components/navbar';
+import React, {useEffect, useState} from 'react';
+import { Link } from 'react-router-dom';
 import ProjectHeader from '../../components/projectheader';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Navbar from '../../components/navbar'; 
+// import datepicker from '../../components/datepicker';
 import axios from 'axios';
 
-const { Header, Content, Footer } = Layout;
-
 function SubmittedProjectsPage() {
+  const [data, setData] = useState([]);
+  const [projectstatus, setProjectStatus] = useState("");
+  const [approvedDate, setApprovedDate] = useState(null); //? to store approved date
+  const [startedDate, setStartedDate] = useState(null); //? to store start date
+  const [endedDate, setEndedDate] = useState(null); //? to store end date
+
+
+
+  useEffect(() => {
+    let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: process.env.REACT_APP_BACKEND_URL+'paper/getall',
+    headers: { 
+      'Authorization': localStorage.getItem('Token')
+    },
+  };
+
+    axios.request(config)
+    .then((response) => {
+      // console.log(JSON.stringify(response.data));
+      setData(response.data.papers)
+      console.log(response.data.papers)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, [])
+
+  // const handleOptionChange = (id, value) => {
+  //   if(approvedDate !== null){
+  //     if(value == "accepted"){
+  //       value = "ongoing"
+  //     }
+
+  //     if(value!==""){
+  //       //setProjectStatus(value)
+  //       // Send PATCH request to server with _id and selected option
+  //       let data = JSON.stringify({
+  //         "_id": id,
+  //         "status_p": value,
+  //         "approved_date": approvedDate
+  //       });
+
+
+  //       try {
+  //         //? api patch req
+  //         let config = {
+  //           method: 'patch',
+  //           url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+  //           headers: { 
+  //             'Authorization': localStorage.getItem('Token'),
+  //             'Content-Type': 'application/json'
+  //           },
+  //           data: data
+  //         };
+
+  //         axios.request(config)
+  //           .then((response) => {
+  //           // console.log(JSON.stringify(response.data));
+  //           // setData(response.data.papers)
+  //           // console.log(response.data.papers)
+  //           if(response.status == 200) {
+  //             console.log("updated successfully")
+  //           }
+  //           window.location.reload(); // Reload the page after successful request
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     }
+  //   }
+  //   else {
+  //     alert('Please select a date');
+  //   }
+  // };
+  const handleOptionChange = (id, value) => {
+    if((projectstatus == "rejected" && approvedDate !== null) || (projectstatus == "accepted" && approvedDate !== null && startedDate !== null && endedDate !== null &&  startedDate < endedDate )){
+        if(value == "accepted"){
+          value = "ongoing"
+        }
+
+        if(value!==""){
+          //setProjectStatus(value)
+          // Send PATCH request to server with _id and selected option
+          let data = JSON.stringify({
+            "_id": id,
+            "status_p": value,
+            "approved_date": approvedDate,
+            "start_date": startedDate,
+            "end_date": endedDate
+          });
+
+
+          try {
+            //? api patch req
+            let config = {
+              method: 'patch',
+              url: process.env.REACT_APP_BACKEND_URL+'paper/update',
+              headers: { 
+                'Authorization': localStorage.getItem('Token'),
+                'Content-Type': 'application/json'
+              },
+              data: data
+            };
+
+            axios.request(config)
+              .then((response) => {
+              // console.log(JSON.stringify(response.data));
+              // setData(response.data.papers)
+              // console.log(response.data.papers)
+              if(response.status == 200) {
+                console.log("updated successfully")
+              }
+              window.location.reload(); // Reload the page after successful request
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      }
+      else {
+        alert("dates havent been filled properly")
+      }
+
+  };
+
+
+  const handleDelete = (id) => {
+
+    //setProjectStatus(value)
+    // Send PATCH request to server with _id and selected option
+    let data = JSON.stringify({
+      "_id": id
+    });
+
+
+    try {
+      //? api patch req
+      let config = {
+        method: 'delete',
+        url: process.env.REACT_APP_BACKEND_URL+'paper/delete',
+        headers: { 
+          'Authorization': localStorage.getItem('Token'),
+          'Content-Type': 'application/json'
+        },
+        data: data
+      };
+      console.log(data);
+      axios.request(config)
+        .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        // setData(response.data.papers)
+        // console.log(response.data.papers)
+        if(response.status == 200) {
+          console.log("deleted successfully")
+        }
+        window.location.reload(); // Reload the page after successful request
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   return (
     <div>
-       <Navbar/>
-       <ProjectHeader/>
+      <Navbar/>
+      <ProjectHeader/>
+      
+      <div className="site-layout" style={{ padding: "0 50px" }}>
+        <div style={{ padding: 24, minHeight: 380 }}>
 
-       <Content className="site-layout" style={{ padding: '0 50px' }}>
-        
-        <div style={{ padding: 24, minHeight: 380,  }}>
-        <Inputform/>  
+        <table>
+        <thead>
+          <tr>
+            <th>S. No</th>
+            <th>Funding Agency</th>
+            <th>Organization</th>
+            <th>Title</th>
+            <th>PI</th>
+            <th>Co-PI</th>
+            <th>Amount</th>
+            <th>Submission Date</th>
+            <th>Approval Date</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Current Status</th>
+            <th>Edit Status</th>
+            <th>Update </th>
+
+            <th>Delete </th>
+          </tr>
+        </thead>
+        <tbody>
+              {data.map((data, index) => {
+                if (data.status_p === "submitted" ) {
+                  return (
+                    <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{data.funding_agency}</td>
+              <td>{data.agency_type}</td>
+              <td className="_status">{data.title}</td>
+              <td className="_status">{data.PI}</td>
+              <td>{data.coPI}</td>
+              <td>{data.amount}</td>
+              <td>{data.submission_date}</td>
+              {/* <td>{data.approval_date}</td> */}
+              <td>
+              {/* <input
+               type='date'
+               id="submissionDate"
+               required
+              /> */}
+                {/* <datepicker id="dateInput" selected={approvedDate} onChange={date => setApprovedDate(date)} /> */}
+                <input
+                  type='date'
+                  id="approvalDate"
+                  required
+                  // value={approvedDate}
+                  onChange={(e) => setApprovedDate(e.target.value)}
+                />
+              </td>
+
+              <td>
+                 <input type='date' id="startDate" 
+                  required 
+                  // value={startedDate}
+                  onChange={(e) => setStartedDate(e.target.value)}
+                />
+              </td>
+
+              <td>
+                 <input type='date' id="endDate" required 
+                  // value={endedDate}
+                  onChange={(e) => setEndedDate(e.target.value)}
+                />
+              </td>
+
+              <td className='_status'>{data.status_p}</td>
+              {/* <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p}  onChange={(e) => handleOptionChange(data._id, e.target.value)} > */}
+              <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
+            
+                 <option value="accepted">Accepted</option>
+                 <option value="rejected">Rejected</option>
+                 <option value="submitted">Submitted</option>
+                </select>
+              </td>
+              <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
+              {/* <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td> */}
+              <td><button onClick={() => handleDelete(data._id) }>Delete</button></td>
+  
+            </tr>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </tbody>
+      </table>
+
         </div>
-      </Content>
-           
+      </div>
+      
+     
+      
+
     </div>
   );
 }

@@ -207,7 +207,7 @@ function Form() {
   const [coPi, setCoPi] = useState("");
   const [amount, setAmount] = useState("");
   const [submissionDate, setSubmissionDate] = useState("");
-  const [projectStatus, setProjectStatus] = useState("");
+  const [projectStatus, setProjectStatus] = useState("submitted");
   const [formData, setFormData] = useState([]);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -364,7 +364,7 @@ function Form() {
         />
         {/* <DatePicker/>  */}
 
-        <label htmlFor="projectstatus">Select Status:</label>
+        {/* <label htmlFor="projectstatus">Select Status:</label>
         <select
           id="projectstatus"
           required
@@ -377,7 +377,7 @@ function Form() {
           <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
           <option value="submitted">Submitted</option>
-        </select>
+        </select> */}
 
         <button type="submit">Submit</button>
       </form>

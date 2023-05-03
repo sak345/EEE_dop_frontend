@@ -4,7 +4,7 @@ import ProjectHeader from '../../components/projectheader';
 import Navbar from '../../components/navbar'; 
 import axios from 'axios';
 
-function ProjectPage() {
+function RejectedProjectsPage() {
   const [data, setData] = useState([]);
   const [projectstatus, setProjectStatus] = useState("");
 
@@ -30,6 +30,9 @@ function ProjectPage() {
   }, [])
 
   const handleOptionChange = (id, value) => {
+    if(value === "accepted" ){
+      value = "ongoing";
+    }
 
     if(value!==""){
       //setProjectStatus(value)
@@ -135,13 +138,17 @@ function ProjectPage() {
             <th>Submission Date</th>
             <th>Approval Date</th>
             <th>Approval Status</th>
+            <th>Edit Status</th>
+            <th>Update </th>
 
             <th>Delete </th>
           </tr>
         </thead>
         <tbody>
-          {data.map((data, index) => (
-            <tr key={index}>
+              {data.map((data, index) => {
+                if (data.status_p === "rejected" ) {
+                  return (
+                    <tr key={index}>
               <td>{index + 1}</td>
               <td>{data.funding_agency}</td>
               <td>{data.agency_type}</td>
@@ -150,37 +157,43 @@ function ProjectPage() {
               <td>{data.coPI}</td>
               <td>{data.amount}</td>
               <td>{data.submission_date}</td>
-              <td>{data.approved_date}</td>
-             
+              <td>{data.approval_date}</td>
+              {/* <td>
+              <input
+               type='date'
+              id="submissionDate"
+                required
+              />
+              </td> */}
 
               <td className='_status'>{data.status_p}</td>
-              {/* <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
-            
-                 <option value="accepted">Accepted</option>
+              {/* <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p}  onChange={(e) => handleOptionChange(data._id, e.target.value)} > */}
+              <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                  <option value="rejected">Rejected</option>
                  <option value="submitted">Submitted</option>
                 </select>
               </td>
-              <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td> */}
+              <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
+              {/* <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td> */}
               <td><button onClick={() => handleDelete(data._id) }>Delete</button></td>
   
             </tr>
-          ))}
-        </tbody>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </tbody>
       </table>
 
         </div>
       </div>
       
-      {/* <p>{JSON.stringify(data)}</p> */}
-      {/* <Link to="/submittedproject"><button>Submitted Projects</button></Link>
-      <Link to="/ongoingproject"><button>Ongoing Projects</button></Link>
-      <Link to="/completedproject"><button>Completed Projects</button></Link> */}
-
+     
       
 
     </div>
   );
 }
 
-export default ProjectPage;
+export default RejectedProjectsPage;
