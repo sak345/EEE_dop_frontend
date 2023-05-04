@@ -19,11 +19,12 @@ function LogIn() {
                         localStorage.setItem("name", res.data.name);
                         localStorage.setItem("picture", res.data.picture);
                         console.log(process.env.REACT_APP_BACKEND_URL+"auth/login")
+                        console.log(res.data.email);
                         return axios
                             .post(process.env.REACT_APP_BACKEND_URL+"auth/login", {
                                 email: res.data.email
                             })
-                        console.log(res.data.email);
+                        
                     })
                     .then((res) => {
                         localStorage.setItem("Token", 'Bearer ' + res.data.token); 

@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
 import ProjectHeader from '../../components/projectheader';
 import Navbar from '../../components/navbar'; 
 import axios from 'axios';
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 // async function DownloadProjectsPage() {
 //   const [startDate, setStartDate] = useState(null)
@@ -172,26 +169,31 @@ const DownloadProjectsPage = () => {
 
   const handleDownload = () => {
     console.log("toeken: ",localStorage.getItem('Token'));
-    axios
-    .get(process.env.REACT_APP_BACKEND_URL + "admin/paper/download", {
+    let data = JSON.stringify({
       "start_date": startDate,
       "end_date": endDate,
       "status": status
-    }, {
-      headers: {
-        "Authorization": localStorage.getItem('Token'),
+    });
+    console.log(data)
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:5000/api/admin/paper/download',
+      headers: { 
+        'Authorization': 'Bearer '+ localStorage.getItem('Token')
       },
-      responseType: 'blob', // To receive the data as a blob object
+      data : data,
+    };
+
+    axios.request(config)
+    .then((response) => {
+      setCsvData(response.data);
     })
-      .then((res) => {
-        setCsvData(res.data);
-        const pdfDoc = new jsPDF();
-        pdfDoc.text(csvData, 10, 10);
-        pdfDoc.save("papers.pdf");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .catch((error) => {
+      console.log(error);
+      setCsvData("")
+    });
+
   };
   return (
     <div>
@@ -207,8 +209,8 @@ const DownloadProjectsPage = () => {
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
+            <th>Fetch</th>
             <th>Download</th>
-
           </tr>
         </thead>
         <tbody>
@@ -233,12 +235,21 @@ const DownloadProjectsPage = () => {
                       <option value="completed">Completed</option>
                       <option value="rejected">Rejected</option>
                       <option value="submitted">Submitted</option>
-                      <option value="all_projects">All Projects</option>
+                      <option value="all">All Projects</option>
             </select>
             </td>
 
-            <td><button onClick={(e) => handleDownload(e)}>Download</button></td>
-
+            <td><button onClick={(e) => handleDownload(e)}>Fetch</button></td>
+            <td>{csvData && (
+        <a
+          href={`data:text/csv;charset=utf-8,${(csvData)}`}
+          download="filename.csv"
+          onClick={() => setCsvData("")}
+        >
+          download
+        </a>
+      )}</td>
+            
 
         </tbody>
       </table>
