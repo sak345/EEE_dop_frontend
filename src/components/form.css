@@ -21,21 +21,51 @@ form {
     border-radius: 5px;
   }
   
-  button[type="submit"] {
+  button[type="submit-1"] {
     color: #9ca2ad;
     background-color: #01182d;
     padding: 10px;
     border: none;
+    margin-top: 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
   }
-  
+
+  button[type="submit"] {
+    color: #9ca2ad;
+    background-color: #01182d;
+    padding: 10px;
+    border: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  input[type="date"] {
+
+    background-color: #fff;
+    border: 1px solid #ccc;
+    /* font-size: 16px; */
+    padding: 5px;
+    /* width: 200px; */
+  }
+
+
   button[type="submit"]:hover {
     color: #01182d;
     background-color: #ccc;
   }
+  
+  button[type="submit-1"]:hover {
+    color: #01182d;
+    background-color: #ccc;
+  }
+
 
   .form-entry {
   border: 1px solid #ccc;
@@ -75,6 +105,8 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #ddd;
 }
+
+
 
 
 ._status
