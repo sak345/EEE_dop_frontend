@@ -3,52 +3,196 @@ import { Link } from 'react-router-dom';
 import ProjectHeader from '../../components/projectheader';
 import Navbar from '../../components/navbar'; 
 import axios from 'axios';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
-function DownloadProjectsPage() {
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [status, setStatus] = useState("ongoing")
+// async function DownloadProjectsPage() {
+//   const [startDate, setStartDate] = useState(null)
+//   const [endDate, setEndDate] = useState(null)
+//   const [status, setStatus] = useState("ongoing")
   
-  const handleDownload=()=>{
-    let data = JSON.stringify({
+//   const handleDownload= ()=>{
+//     let data = JSON.stringify({
+//       "start_date": startDate,
+//       "end_date": endDate,
+//       "status": status
+//     })
+
+//   try {
+//     // Fetch the CSV data from the API endpoint
+//     const response = axios.get(process.env.REACT_APP_BACKEND_URL + "admin/paper/download", {
+//       responseType: "blob",
+//     });
+//     const csvData = await response.data.text();
+
+//     // Convert the CSV data into an array of papers
+//     const papersArray = await csvData.split("\n");
+
+//     // Create a new instance of jsPDF and set up the document
+//     const pdf = new jsPDF();
+//     pdf.setFontSize(12);
+//     pdf.text("List of Papers", 10, 10);
+
+//     // Loop through the papers array and add each paper to the PDF
+//     for (let i = 0; i < papersArray.length; i++) {
+//       pdf.text(papersArray[i], 10, (i + 2) * 10);
+//     }
+
+//     // Convert the PDF to a Blob object
+//     const pdfBlob = pdf.output("blob");
+
+//     // Create a download link and click it to trigger the download
+//     const downloadLink = window.URL.createObjectURL(pdfBlob);
+//     const link = document.createElement("a");
+//     link.href = downloadLink;
+//     link.download = "papers.pdf";
+//     link.click();
+
+//     // Clean up the download link
+//     window.URL.revokeObjectURL(downloadLink);
+//   } catch (error) {
+//     console.log(error);
+//   }
+//     }
+// function DownloadProjectsPage() {
+//   const [startDate, setStartDate] = useState(null)
+//   const [endDate, setEndDate] = useState(null)
+//   const [status, setStatus] = useState("ongoing")
+  
+//   const handleDownload= ()=>{
+//     let data = JSON.stringify({
+//       "start_date": startDate,
+//       "end_date": endDate,
+//       "status": status
+//     })
+
+//     try {
+//       let config = {
+//         method: "get",
+//         maxBodyLength: Infinity,
+//         url: process.env.REACT_APP_BACKEND_URL + "admin/paper/download",
+//         headers: {
+//           Authorization: localStorage.getItem("Token"),
+//         },
+//         data: data,
+//         responseType: "blob"
+//       };
+//       // console.log("uri:",process.env.REACT_APP_BACKEND_URL + "paper/download", "start_date:", startDate,
+//       // "end_date:", endDate,
+//       // "status: ", status);
+//       axios.request(config)
+//           .then((response) => {
+//           // console.log(JSON.stringify(response.data));
+//           // setData(response.data.papers)
+//           // console.log(response.data.papers)
+//           if(response.status == 200) {
+//             console.log("Downloaded succesfully")
+//           }
+//           const csvData = response.data.text(); // convert binary data to text
+//           const papersArray = csvData.split("\n"); // split the csv data into an array of papers
+//           this.setState({ papers: papersArray }, () => {
+//           this.generatePDF();
+//       });
+//           // window.location.reload(); // Reload the page after successful request
+//         })
+//         .catch((error) => {
+//           console.log(error);
+//         });
+
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     }
+    
+// function DownloadProjectsPage() {
+//   const [startDate, setStartDate] = useState(null);
+//   const [endDate, setEndDate] = useState(null);
+//   const [status, setStatus] = useState("ongoing");
+
+//   const handleDownload = async () => {
+//     let data = JSON.stringify({
+//       start_date: startDate,
+//       end_date: endDate,
+//       status: status,
+//     });
+
+//     try {
+//       let config = {
+//         method: "get",
+//         maxBodyLength: Infinity,
+//         url: process.env.REACT_APP_BACKEND_URL + "admin/paper/download",
+//         headers: {
+//           Authorization: localStorage.getItem("Token"),
+//         },
+//         data: data,
+//         responseType: "blob",
+//       };
+
+//       const response = await axios.request(config);
+
+//       if (response.status === 200) {
+//         console.log("Downloaded successfully");
+//       }
+
+//       const csvData = await response.data.text(); // convert binary data to text
+//       const papersArray = csvData.split("\n"); // split the csv data into an array of papers
+
+//       // Create a new PDF document
+//       const pdf = new jsPDF();
+
+//       // Set the document metadata
+//       pdf.setProperties({
+//         title: "List of Papers",
+//         subject: "Generated by My App",
+//         author: "My App",
+//       });
+
+//       // Add a title to the document
+//       pdf.setFontSize(16);
+//       pdf.text("List of Papers", 14, 20);
+
+//       // Add a table of papers to the document
+//       pdf.autoTable({
+//         startY: 30,
+//         head: [["Title", "Author", "Year", "Status"]],
+//         body: papersArray.map((paper) => paper.split(",")),
+//       });
+
+//       // Save the PDF document
+//       pdf.save("papers.pdf");
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+const DownloadProjectsPage = () => {
+  const [csvData, setCsvData] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [status, setStatus] = useState("ongoing");
+
+  const handleDownload = () => {
+    console.log("toeken: ",localStorage.getItem('Token'));
+    axios
+    .get(process.env.REACT_APP_BACKEND_URL + "admin/paper/download", {
       "start_date": startDate,
       "end_date": endDate,
       "status": status
+    }, {
+      headers: {
+        "Authorization": localStorage.getItem('Token'),
+      },
+      responseType: 'blob', // To receive the data as a blob object
     })
-
-    try {
-      let config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url: process.env.REACT_APP_BACKEND_URL + "paper/download",
-        headers: {
-          Authorization: localStorage.getItem("Token"),
-        },
-        data: data
-      };
-      console.log("uri:",process.env.REACT_APP_BACKEND_URL + "paper/download", "start_date:", startDate,
-      "end_date:", endDate,
-      "status: ", status);
-      axios.request(config)
-          .then((response) => {
-          // console.log(JSON.stringify(response.data));
-          // setData(response.data.papers)
-          // console.log(response.data.papers)
-          if(response.status == 200) {
-            console.log("Downloaded succesfully")
-          }
-          // window.location.reload(); // Reload the page after successful request
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    
-
+      .then((res) => {
+        setCsvData(res.data);
+        const pdfDoc = new jsPDF();
+        pdfDoc.text(csvData, 10, 10);
+        pdfDoc.save("papers.pdf");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
       <Navbar/>
@@ -94,6 +238,7 @@ function DownloadProjectsPage() {
             </td>
 
             <td><button onClick={(e) => handleDownload(e)}>Download</button></td>
+
 
         </tbody>
       </table>
