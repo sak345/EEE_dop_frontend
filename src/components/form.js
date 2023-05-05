@@ -379,7 +379,7 @@ function Form() {
           <option value="submitted">Submitted</option>
         </select> */}
 
-        <button type="submit">Submit</button>
+        <button type="submit-1">Submit</button>
       </form>
 
       

@@ -27,3 +27,29 @@
     color: #01182d;
     background-color: #ccc;
   }
+
+  .button-nav {
+    background-color: #01182d;
+    color: #9ca2ad;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+ 
+  .button-nav:hover {
+    color: #01182d;
+    background-color: #ccc;
+  }
+
+  .button-nav-1 {
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #01182d;
+    background-color: #ccc;
+  }
+  

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import ProjectHeader from '../../components/projectheader';
 import Navbar from '../../components/navbar'; 
 import axios from 'axios';
+import { NavLink } from "react-router-dom";
+import styles from '../../styles';
+// import './projectheader.css';
 
 function RejectedProjectsPage() {
   const [data, setData] = useState([]);
@@ -120,7 +123,38 @@ function RejectedProjectsPage() {
   return (
     <div>
       <Navbar/>
-      <ProjectHeader/>
+      {/* <ProjectHeader/> */}
+
+      <header >
+            <h1 style={styles.pageTitle}>Projects</h1>
+
+            <nav style={styles.nav}>
+                <ul style={styles.navContainer}>
+                    <li style={styles.firstChild}>
+                        <NavLink to="/enterproject"><button className="button-nav">Enter Project</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/project"><button className="button-nav">All Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/submittedproject"><button className="button-nav">Submitted Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/rejectedproject"><button className="button-nav-1">Rejected Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/ongoingproject"><button className="button-nav">Ongoing Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/completedproject"><button className="button-nav">Completed Projects</button></NavLink>
+                    </li>
+                    <li style={styles.lastChild}>
+                        <NavLink to="/downloadproject"><button className="button-nav">Download Projects</button></NavLink>
+                    </li>
+                </ul>
+            
+            </nav>
+        </header>
       
       <div className="site-layout" style={{ padding: "0 50px" }}>
         <div style={{ padding: 24, minHeight: 380 }}>
@@ -157,7 +191,7 @@ function RejectedProjectsPage() {
               <td>{data.coPI}</td>
               <td>{data.amount}</td>
               <td>{data.submission_date}</td>
-              <td>{data.approval_date}</td>
+              <td>{data.approved_date}</td>
               {/* <td>
               <input
                type='date'
@@ -168,14 +202,14 @@ function RejectedProjectsPage() {
 
               <td className='_status'>{data.status_p}</td>
               {/* <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p}  onChange={(e) => handleOptionChange(data._id, e.target.value)} > */}
-              <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
+              <td><select style={styles.dropMenu}  data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                  <option value="rejected">Rejected</option>
                  <option value="submitted">Submitted</option>
                 </select>
               </td>
-              <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
+              <td> <button type="submit" onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
               {/* <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td> */}
-              <td><button onClick={() => handleDelete(data._id) }>Delete</button></td>
+              <td><button type="submit" onClick={() => handleDelete(data._id) }>Delete</button></td>
   
             </tr>
                   );

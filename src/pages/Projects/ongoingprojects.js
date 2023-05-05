@@ -5,6 +5,8 @@ import Navbar from '../../components/navbar';
 import axios from "axios";
 import Inputform from '../../components/form';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { NavLink } from "react-router-dom";
+import styles from '../../styles';
 
 
 const { Header, Content, Footer } = Layout;
@@ -144,7 +146,39 @@ function OngoingProjectsPage() {
   return (
     <div>
       <Navbar />
-      <ProjectHeader />
+      {/* <ProjectHeader /> */}
+      <header >
+            <h1 style={styles.pageTitle}>Projects</h1>
+
+            <nav style={styles.nav}>
+                <ul style={styles.navContainer}>
+                    <li style={styles.firstChild}>
+                        <NavLink to="/enterproject"><button className="button-nav">Enter Project</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/project"><button className="button-nav">All Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/submittedproject"><button className="button-nav">Submitted Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/rejectedproject"><button className="button-nav">Rejected Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/ongoingproject"><button className="button-nav-1">Ongoing Projects</button></NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/completedproject"><button className="button-nav">Completed Projects</button></NavLink>
+                    </li>
+                    <li style={styles.lastChild}>
+                        <NavLink to="/downloadproject"><button className="button-nav">Download Projects</button></NavLink>
+                    </li>
+                </ul>
+            
+            </nav>
+        </header>
+
+
       <div className="site-layout" style={{ padding: "0 50px" }}>
         <div style={{ padding: 24, minHeight: 380 }}>
           <table>
@@ -200,7 +234,7 @@ function OngoingProjectsPage() {
         
                       <td className='_status'>{data.status_p}</td>
 
-                      <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
+                      <td><select style={styles.dropMenu}  type="submit" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                             <option value="ongoing">Ongoing</option>
                             <option value="completed">Completed</option>
                             <option value="rejected">Rejected</option>
@@ -208,7 +242,7 @@ function OngoingProjectsPage() {
 
                           </select>
                       </td>
-                      <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
+                      <td> <button type="submit" onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
   
 
                     </tr>
