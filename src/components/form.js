@@ -207,7 +207,6 @@ function Form() {
   const [coPi, setCoPi] = useState("");
   const [amount, setAmount] = useState("");
   const [submissionDate, setSubmissionDate] = useState("");
-  const [projectStatus, setProjectStatus] = useState("submitted");
   const [formData, setFormData] = useState([]);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -225,7 +224,6 @@ function Form() {
       coPi,
       amount,
       submissionDate,
-      projectStatus,
     };
 
     setFormData([...formData, newFormData]);
@@ -236,7 +234,6 @@ function Form() {
     setCoPi("");
     setAmount("");
     setSubmissionDate("");
-    setProjectStatus("");
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", localStorage.getItem("Token"));
@@ -250,7 +247,7 @@ function Form() {
       submission_date: newFormData.submissionDate,
       coPI: newFormData.coPi,
       amount: newFormData.amount,
-      status_p: newFormData.projectStatus,
+      status_p: "submitted"
     });
 
     var requestOptions = {

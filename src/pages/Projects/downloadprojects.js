@@ -172,29 +172,30 @@ const DownloadProjectsPage = () => {
   const handleDownload = () => {
     console.log("toeken: ",localStorage.getItem('Token'));
     let data = JSON.stringify({
-      "start_date": startDate,
-      "end_date": endDate,
-      "status": status
-    });
-    console.log(data)
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'http://localhost:5000/api/admin/paper/download',
-      headers: { 
-        'Authorization': 'Bearer '+ localStorage.getItem('Token')
-      },
-      data : data,
-    };
+  "start_date": startDate,
+  "end_date": endDate,
+  "status": status
+});
 
-    axios.request(config)
-    .then((response) => {
-      setCsvData(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-      setCsvData("")
-    });
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: 'http://localhost:5000/api/admin/paper/download',
+  headers: { 
+    'Authorization': 'Bearer '+ localStorage.getItem('Token'), 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+
+axios.request(config)
+.then((response) => {
+  setCsvData(response.data)
+})
+.catch((error) => {
+  console.log(error);
+  setCsvData("")
+});
 
   };
   return (
@@ -271,7 +272,16 @@ const DownloadProjectsPage = () => {
             </select>
             </td>
 
-            <td><button onClick={(e) => handleDownload(e)}>Download</button></td>
+            <td><button onClick={(e) => handleDownload(e)}>Fetch</button></td>
+             <td>{csvData && (
+              <a
+                href={`data:text/csv;charset=utf-8,${(csvData)}`}
+                download="filename.csv"
+                onClick={() => setCsvData("")}
+              >
+                download
+              </a>
+            )}</td>
 
 
         </tbody>
@@ -288,7 +298,7 @@ const DownloadProjectsPage = () => {
 
         
       
-     
+              
       
 
     </div>
