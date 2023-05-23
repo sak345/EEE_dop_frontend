@@ -1,12 +1,15 @@
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';;
+import { Navigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function LogIn() {
     const [logged, setLogged] = useState(false)
     function getToken(user){
         if (user) {
+            const id = toast.loading("Please wait...")
                 axios
                     .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
                         headers: {
@@ -27,12 +30,17 @@ function LogIn() {
                         
                     })
                     .then((res) => {
+                        console.log(res)
+                        toast.update(id, {render: "All is good", type: "success", isLoading: false});
                         localStorage.setItem("Token", 'Bearer ' + res.data.token); 
+                        localStorage.setItem("role", res.data.role); 
                         console.log("Login successful")
                         setLogged(true)
-                        
+                    
                     })
-                    .catch((err) => console.log(err));
+                    .catch((err) => {
+                        toast.update(id, {render: "some problem with login", type: "false", isLoading: false});
+                        console.log(err)});
             }
     }
 
@@ -55,6 +63,7 @@ function LogIn() {
    } else {
         return (
         <div>
+            <ToastContainer />
             <h2>React Google Login</h2>
             <br />
             <br />
