@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from "react-router-dom";
 import { UserOutlined,  } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import LogoutButton from './logout';
 import styles from '../styles';
 //import './navbar.css'
 
@@ -19,8 +20,10 @@ function Navbar() {
 
               <div style={styles.navRight}>
                  <button className="button nav"><UserOutlined/> User Profile </button>
+                 < LogoutButton />
                </div>
-
+                        
+         
          </ul>
          
              
