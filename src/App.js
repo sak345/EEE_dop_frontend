@@ -46,9 +46,9 @@ function App() {
 
   if (isAdmin) {
     return (
-      <BrowserRouter>
+      <BrowserRouter basename='/index.html'>
         <Routes>
-          <Route path='/login' element={<LogIn />} />
+          <Route path='/' element={<LogIn />} />
           <Route
             path='/'
             element={
@@ -123,14 +123,14 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/index.html'>
       <Routes>
-        <Route path='/login' element={<LogIn />} />
+        <Route path='/homepage' element={<HomePage />} />
         <Route
           path='/'
           element={
             <PrivateRoute>
-              <HomePage />
+              <LogIn />
             </PrivateRoute>
           }
         />

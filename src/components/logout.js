@@ -1,21 +1,23 @@
 // LogoutButton.js
-import React from 'react';
-import styles from '../styles';
+import React from 'react'
+import styles from '../styles'
 
 const LogoutButton = () => {
   const handleLogout = () => {
-    // Clear client-side authentication state 
-    localStorage.removeItem('userToken');
+    // Clear client-side authentication state
+    localStorage.removeItem('userToken')
 
-    // Redirect to the home page 
-    window.location.href = '/login';
-  };
+    // Redirect to the home page
+    window.location.href = '/'
+  }
 
   return (
-    <div style={styles.navRight}> 
-    <button onClick={handleLogout} className="button nav">Logout</button>
+    <div style={styles.navRight}>
+      <button onClick={handleLogout} className='button nav'>
+        Logout
+      </button>
     </div>
-  );
-};
+  )
+}
 
-export default LogoutButton;
+export default LogoutButton
