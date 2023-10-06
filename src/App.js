@@ -129,9 +129,7 @@ function App() {
         <Route
           path='/'
           element={
-            <PrivateRoute>
               <LogIn />
-            </PrivateRoute>
           }
         />
         <Route
