@@ -46,7 +46,7 @@ function App() {
 
   if (isAdmin) {
     return (
-      <BrowserRouter basename='/index.html'>
+      <BrowserRouter >
         <Routes>
           <Route path='/' element={<LogIn />} />
           <Route
@@ -123,7 +123,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter basename='/index.html'>
+    <BrowserRouter >
       <Routes>
         <Route path='/homepage' element={<HomePage />} />
         <Route
