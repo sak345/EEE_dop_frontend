@@ -125,12 +125,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<LogIn />} />
+        <Route path='/homepage' element={<HomePage />} />
         <Route
           path='/'
           element={
             <PrivateRoute>
-              <HomePage />
+              <LogIn />
             </PrivateRoute>
           }
         />

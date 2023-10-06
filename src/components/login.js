@@ -68,16 +68,30 @@ function LogIn() {
   }
 
   if (logged) {
-    return <Navigate to='/' />
+    return <Navigate to='/homepage' />
   } else {
     return (
-      <div>
+      <div style={{ textAlign: 'center', marginTop: '50px' }}>
         <ToastContainer />
-        <h2>React Google Login</h2>
+        <h2 style={{ color: '#333', fontFamily: 'Arial, sans-serif' }}>
+          React Google Login
+        </h2>
         <br />
         <br />
-        <button onClick={() => login()}>Sign in with Google 🚀 </button>
-        <button onClick={logOut}>Log out</button>
+        <button
+          style={{
+            backgroundColor: '#4285F4',
+            color: '#fff',
+            border: 'none',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+          }}
+          onClick={() => login()}
+        >
+          Sign in with Google 🚀
+        </button>
       </div>
     )
   }
