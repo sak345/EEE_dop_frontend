@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { Navigate, Routes, Route } from 'react-router-dom'
 import axios from 'axios'
 
@@ -46,7 +46,7 @@ function App() {
 
   if (isAdmin) {
     return (
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path='/login' element={<LogIn />} />
           <Route
@@ -118,12 +118,12 @@ function App() {
 
           <Route path='/a' element={<APage />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     )
   }
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path='/homepage' element={<HomePage />} />
         <Route
@@ -188,7 +188,7 @@ function App() {
 
         <Route path='/a' element={<APage />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
 export default App
