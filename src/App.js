@@ -123,7 +123,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/'>
       <Routes>
         <Route path='/homepage' element={<HomePage />} />
         <Route
