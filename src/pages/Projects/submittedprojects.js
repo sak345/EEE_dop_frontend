@@ -15,28 +15,31 @@ function SubmittedProjectsPage() {
   const [endedDate, setEndedDate] = useState(null); //? to store end date
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    let confi = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: process.env.REACT_APP_BACKEND_URL+'user/me',
-      headers: { 
-        'Authorization': localStorage.getItem('Token')
-      },
-    };
-    // Make a GET request to the server to get the user's role
-    axios.get(confi).then((response) => {
-      const { role } = response.data;
+  //   let confi = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: process.env.REACT_APP_BACKEND_URL+'user/me',
+  //     headers: { 
+  //       'Authorization': localStorage.getItem('Token')
+  //     },
+  //   };
+  //   // Make a GET request to the server to get the user's role
+  //   axios.get(confi).then((response) => {
+  //     const { role } = response.data;
 
-      // If the user is an admin, set the state to true
-      if (role === 'admin') {
-        setIsAdmin(true);
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
-  }, []);
+  //     // If the user is an admin, set the state to true
+  //     if (role === 'admin') {
+  //       setIsAdmin(true);
+  //     }
+  //     else{
+  //       alert('member')
+  //      } 
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  // }, []);
 
 
   useEffect(() => {
@@ -111,6 +114,48 @@ function SubmittedProjectsPage() {
   //     alert('Please select a date');
   //   }
   // };
+  useEffect(() => {
+    // Check local storage for the JSON file
+    
+     const userData = localStorage.getItem('role');
+    if (userData) {
+      try {
+        // Parse the JSON data
+        console.log(userData) 
+       
+        
+        if (userData=='admin') {
+          // Set the user role in the component's state
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+  }, ) 
+  
+  useEffect(() => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: process.env.REACT_APP_BACKEND_URL + 'admin/paper/getall',
+      headers: {
+        Authorization: localStorage.getItem('Token'),
+      },
+    }
+
+    axios
+      .request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        setData(response.data.papers)
+        console.log(response.data.papers)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
+
   const handleOptionChange = (id, value) => {
     if((projectstatus == "rejected" && approvedDate !== null) || (projectstatus == "accepted" && approvedDate !== null && startedDate !== null && endedDate !== null &&  startedDate < endedDate )){
         if(value == "accepted"){
@@ -258,7 +303,7 @@ function SubmittedProjectsPage() {
               <th>Title</th>
               <th>PI</th>
               <th>Co-PI</th>
-              <th>Amount</th>
+              <th>Amm</th>
               <th>Submission Date</th>
               <th>Approval Date</th>
               <th>Start Date</th>

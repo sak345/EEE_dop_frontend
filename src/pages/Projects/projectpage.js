@@ -11,30 +11,32 @@ function ProjectPage() {
   const [projectstatus, setProjectStatus] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
 
-  useEffect(() => {
-    let confi = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: process.env.REACT_APP_BACKEND_URL + 'user/me',
-      headers: {
-        Authorization: localStorage.getItem('Token'),
-      },
-    }
-    // Make a GET request to the server to get the user's role
-    axios
-      .get(confi)
-      .then((response) => {
-        const { role } = response.data
-
-        // If the user is an admin, set the state to true
-        if (role === 'admin') {
-          setIsAdmin(true)
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }, [])
+  // useEffect(() => {
+  //   let confi = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: process.env.REACT_APP_BACKEND_URL + 'user/me',
+  //     headers: {
+  //       Authorization: localStorage.getItem('Token'),
+  //     },
+  //   }
+  //   // Make a GET request to the server to get the user's role
+  //   axios
+  //     .get(confi)
+  //     .then((response) => {
+  //       const { role } = response.data
+         
+  //       // If the user is an admin, set the state to true
+  //       if (role === 'admin') {
+  //         setIsAdmin(true)
+         
+  //       }
+      
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //     })
+  // }, [])
 
   useEffect(() => {
     let config = {
@@ -57,7 +59,29 @@ function ProjectPage() {
         console.log(error)
       })
   }, [])
+   
+ useEffect(() => {
+    // Check local storage for the JSON file
+    
+     const userData = localStorage.getItem('role');
+    if (userData) {
+      try {
+        // Parse the JSON data
+        console.log(userData) 
+       
+        
+        if (userData=='admin') {
+          // Set the user role in the component's state
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+  }, ) 
 
+
+  
   const handleOptionChange = (id, value) => {
     if (value !== '') {
       //setProjectStatus(value)
@@ -139,8 +163,10 @@ function ProjectPage() {
 
   if (isAdmin) {
     return (
+      
       <div>
         <Navbar />
+        
         {/* <ProjectHeader/> */}
         <header>
           <h1 style={styles.pageTitle}>Projects</h1>
@@ -197,8 +223,8 @@ function ProjectPage() {
                   <th>Title</th>
                   <th>PI</th>
                   <th>Co-PI</th>
-                  <th>Amount</th>
-                  <th>Submission Date</th>
+                  <th>Amnt</th>
+                  <th>Submion Date</th>
                   <th>Approval Date</th>
                   <th>Approval Status</th>
 
@@ -297,7 +323,7 @@ function ProjectPage() {
               <tr>
                 <th>S. No</th>
                 <th>Funding Agency</th>
-                <th>Organization</th>
+                <th>Organn</th>
                 <th>Title</th>
                 <th>PI</th>
                 <th>Co-PI</th>

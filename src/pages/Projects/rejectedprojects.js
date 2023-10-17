@@ -34,29 +34,50 @@ function RejectedProjectsPage() {
     });
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    let confi = {
+  //   let confi = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: process.env.REACT_APP_BACKEND_URL+'user/me',
+  //     headers: { 
+  //       'Authorization': localStorage.getItem('Token')
+  //     },
+  //   };
+  //   // Make a GET request to the server to get the user's role
+  //   axios.get(confi).then((response) => {
+  //     const { role } = response.data;
+
+  //     // If the user is an admin, set the state to true
+  //     if (role === 'admin') {
+  //       setIsAdmin(true);
+  //     }
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  // }, []);
+  useEffect(() => {
+    let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: process.env.REACT_APP_BACKEND_URL+'user/me',
-      headers: { 
-        'Authorization': localStorage.getItem('Token')
+      url: process.env.REACT_APP_BACKEND_URL + 'admin/paper/getall',
+      headers: {
+        Authorization: localStorage.getItem('Token'),
       },
-    };
-    // Make a GET request to the server to get the user's role
-    axios.get(confi).then((response) => {
-      const { role } = response.data;
+    }
 
-      // If the user is an admin, set the state to true
-      if (role === 'admin') {
-        setIsAdmin(true);
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
-  }, []);
-
+    axios
+      .request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        setData(response.data.papers)
+        console.log(response.data.papers)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
+  
   const handleOptionChange = (id, value) => {
     if(value === "accepted" ){
       value = "ongoing";
