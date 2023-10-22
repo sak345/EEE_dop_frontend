@@ -30,7 +30,7 @@ function ProjectHeader() {
                         <NavLink to="/completedproject"><button className="button nav">Completed Projects</button></NavLink>
                     </li>
                     <li style={styles.lastChild}>
-                        <NavLink to="/downloadproject"><button className="button nav">Download Projects</button></NavLink>
+                        <NavLink to="/downloadproject"><button className="button nav">Downld Projects</button></NavLink>
                     </li>
                 </ul>
             

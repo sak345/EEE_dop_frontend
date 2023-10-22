@@ -40,6 +40,27 @@ function ProjectPage() {
 
   useEffect(() => {
     let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: process.env.REACT_APP_BACKEND_URL+'paper/getall',
+    headers: { 
+      'Authorization': localStorage.getItem('Token')
+    },
+  };
+
+    axios.request(config)
+    .then((response) => {
+      // console.log(JSON.stringify(response.data));
+      setData(response.data.papers)
+      console.log(response.data.papers)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []) 
+  
+  useEffect(() => {
+    let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: process.env.REACT_APP_BACKEND_URL + 'admin/paper/getall',
@@ -62,14 +83,10 @@ function ProjectPage() {
    
  useEffect(() => {
     // Check local storage for the JSON file
-    
-     const userData = localStorage.getItem('role');
+    const userData = localStorage.getItem('role');
     if (userData) {
       try {
-        // Parse the JSON data
         console.log(userData) 
-       
-        
         if (userData=='admin') {
           // Set the user role in the component's state
           setIsAdmin(true);
@@ -79,6 +96,7 @@ function ProjectPage() {
       }
     }
   }, ) 
+  
 
 
   
@@ -224,7 +242,7 @@ function ProjectPage() {
                   <th>PI</th>
                   <th>Co-PI</th>
                   <th>Amnt</th>
-                  <th>Submion Date</th>
+                  <th>Submission Date</th>
                   <th>Approval Date</th>
                   <th>Approval Status</th>
 

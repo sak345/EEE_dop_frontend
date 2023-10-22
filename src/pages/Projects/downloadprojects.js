@@ -176,13 +176,13 @@ const DownloadProjectsPage = () => {
   "end_date": endDate,
   "status": status
 });
-
+console.log(data) 
 let config = {
   method: 'post',
   maxBodyLength: Infinity,
-  url: 'http://localhost:5000/api/admin/paper/download',
+  url: process.env.REACT_APP_BACKEND_URL+ 'admin/paper/download',
   headers: { 
-    'Authorization': 'Bearer '+ localStorage.getItem('Token'), 
+    'Authorization': 'Bearer'+ localStorage.getItem('Token'), 
     'Content-Type': 'application/json'
   },
   data : data
@@ -196,7 +196,7 @@ axios.request(config)
   console.log(error);
   setCsvData("")
 });
-
+console.log(csvData)
   };
   return (
     <div>
@@ -289,16 +289,7 @@ axios.request(config)
 
         </div>
       </div>
-      
-      
-
-        
        
-      
-
-        
-      
-              
       
 
     </div>
