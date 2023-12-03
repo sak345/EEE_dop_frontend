@@ -247,10 +247,11 @@ function CompletedProjectsPage() {
                         <td className="_status">{data.PI}</td>
                         <td>{data.coPI}</td>
                         <td>{data.amount}</td>
-                        <td>{data.submission_date}</td>
-                        <td>{data.approval_date}</td>
-                        <td>{data.start_date}</td>
-                        <td>{data.completed_date}</td>
+                        <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
+                        <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
+                       
+                        <td>{data.start_date?data.start_date.substring(0, 10):''}</td>
+                      <td>{data.completed_date?data.completed_date.substring(0, 10):''}</td>
                         <td className="_status">{data.status_p}</td>
                         <td><select style={styles.dropMenu}  data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                             <option value="ongoing">Ongoing</option>
@@ -351,10 +352,11 @@ function CompletedProjectsPage() {
                       <td className="_status">{data.PI}</td>
                       <td>{data.coPI}</td>
                       <td>{data.amount}</td>
-                      <td>{data.submission_date}</td>
-                      <td>{data.approval_date}</td>
-                      <td>{data.start_date}</td>
-                      <td>{data.completed_date}</td>
+                      <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
+                        <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
+                       
+                        <td>{data.start_date?data.start_date.substring(0, 10):''}</td>
+                      <td>{data.completed_date?data.completed_date.substring(0, 10):''}</td>
                       <td className="_status">{data.status_p}</td>
                       <td><select style={styles.dropMenu}  data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
                           <option value="ongoing">Ongoing</option>

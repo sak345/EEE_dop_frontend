@@ -240,8 +240,8 @@ function RejectedProjectsPage() {
                 <td className="_status">{data.PI}</td>
                 <td>{data.coPI}</td>
                 <td>{data.amount}</td>
-                <td>{data.submission_date}</td>
-                <td>{data.approved_date}</td>
+                <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
+                <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
                 {/* <td>
                 <input
                  type='date'
@@ -352,8 +352,8 @@ function RejectedProjectsPage() {
               <td className="_status">{data.PI}</td>
               <td>{data.coPI}</td>
               <td>{data.amount}</td>
-              <td>{data.submission_date}</td>
-              <td>{data.approved_date}</td>
+              <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
+              <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
               {/* <td>
               <input
                type='date'

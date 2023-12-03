@@ -10,6 +10,7 @@ function ProjectPage() {
   const [data, setData] = useState([])
   const [projectstatus, setProjectStatus] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
+  const [subDate,setSub] = useState('')
 
   // useEffect(() => {
   //   let confi = {
@@ -74,7 +75,9 @@ function ProjectPage() {
       .then((response) => {
         // console.log(JSON.stringify(response.data));
         setData(response.data.papers)
+        setSub(response.data.papers.submission_date)
         console.log(response.data.papers)
+        console.log(subDate)
       })
       .catch((error) => {
         console.log(error)
@@ -96,8 +99,6 @@ function ProjectPage() {
       }
     }
   }, ) 
-  
-
 
   
   const handleOptionChange = (id, value) => {
@@ -259,18 +260,10 @@ function ProjectPage() {
                     <td className='_status'>{data.PI}</td>
                     <td>{data.coPI}</td>
                     <td>{data.amount}</td>
-                    <td>{data.submission_date}</td>
-                    <td>{data.approved_date}</td>
+                    <td>{data.submission_date.substring(0, 10)}</td>
+                    <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
 
                     <td className='_status'>{data.status_p}</td>
-                    {/* <td><select class="form-control edit-status-select" data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
-            
-                 <option value="accepted">Accepted</option>
-                 <option value="rejected">Rejected</option>
-                 <option value="submitted">Submitted</option>
-                </select>
-              </td>
-              <td> <button onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td> */}
                     <td>
                       <button
                         type='submit'
