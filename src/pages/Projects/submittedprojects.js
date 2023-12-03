@@ -327,7 +327,7 @@ function SubmittedProjectsPage() {
                 <td className="_status">{data.PI}</td>
                 <td>{data.coPI}</td>
                 <td>{data.amount}</td>
-                <td>{data.submission_date}</td>
+                <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
                 {/* <td>{data.approval_date}</td> */}
                 <td>
                 {/* <input
