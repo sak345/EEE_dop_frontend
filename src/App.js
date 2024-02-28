@@ -19,30 +19,30 @@ import DownloadProjectsPage from './pages/Projects/downloadprojects'
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
 
-  // useEffect(() => {
-  //   let confi = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: process.env.REACT_APP_BACKEND_URL + 'user/me',
-  //     headers: {
-  //       Authorization: localStorage.getItem('Token'),
-  //     },
-  //   }
-  //   // Make a GET request to the server to get the user's role
-  //   axios
-  //     .get(confi)
-  //     .then((response) => {
-  //       const { role } = response.data
+  useEffect(() => {
+    let confi = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: process.env.REACT_APP_BACKEND_URL + 'user/me',
+      headers: {
+        Authorization: localStorage.getItem('Token'),
+      },
+    }
+    // Make a GET request to the server to get the user's role
+    axios
+      .get(confi)
+      .then((response) => {
+        const { role } = response.data
 
-  //       // If the user is an admin, set the state to true
-  //       if (role === 'admin') {
-  //         setIsAdmin(true)
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error)
-  //     })
-  // }, [])
+        // If the user is an admin, set the state to true
+        if (role === 'admin') {
+          setIsAdmin(true)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }, [])
 
 
   return (
