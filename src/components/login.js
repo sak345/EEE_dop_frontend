@@ -24,6 +24,7 @@ function LogIn() {
           localStorage.setItem('email', res.data.email)
           localStorage.setItem('name', res.data.name)
           localStorage.setItem('picture', res.data.picture)
+          localStorage.setItem('userId', res.data.id)
           console.log(process.env.REACT_APP_BACKEND_URL + 'auth/login')
           console.log(res.data.email)
           return axios.post(process.env.REACT_APP_BACKEND_URL + 'auth/login', {

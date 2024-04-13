@@ -5,7 +5,8 @@ import axios from 'axios'
 
 import ProjectPage from './pages/Projects/projectpage'
 import HomePage from './pages/homepage'
-import APage from './pages/2ndpage'
+import AllJournals from './pages/Journals/allJournals'
+import AddJournals from './pages/Journals/addJournals'
 import SubmittedProjectsPage from './pages/Projects/submittedprojects'
 import OngoingProjectsPage from './pages/Projects/ongoingprojects'
 import CompletedProjectsPage from './pages/Projects/completedprojects'
@@ -52,7 +53,7 @@ function App() {
         <Route
           path='/'
           element={
-              <LogIn />
+            <LogIn />
           }
         />
         <Route
@@ -105,9 +106,10 @@ function App() {
             </PrivateRoute>
           }
         />
-      <Route path="/downloadproject" element={<PrivateRoute><DownloadProjectsPage/></PrivateRoute>} /> 
+        <Route path="/downloadproject" element={<PrivateRoute><DownloadProjectsPage /></PrivateRoute>} />
 
-        <Route path='/a' element={<APage />} />
+        <Route path='/journals' element={<AllJournals />} />
+        <Route path='/journals/add' element={<AddJournals />} />
       </Routes>
     </BrowserRouter>
   )
