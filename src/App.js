@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Navigate, Routes, Route } from 'react-router-dom'
 import axios from 'axios'
-
+import { ToastContainer } from 'react-toastify';
 import ProjectPage from './pages/Projects/projectpage'
 import HomePage from './pages/homepage'
 import AllJournals from './pages/Journals/allJournals'
@@ -48,6 +48,7 @@ function App() {
 
   return (
     <BrowserRouter >
+      <ToastContainer />
       <Routes>
         <Route path='/homepage' element={<HomePage />} />
         <Route

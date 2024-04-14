@@ -1,6 +1,11 @@
+
 const styles = {
 
   navTitleButton: {
+    display: 'flex',
+    alignItems: 'center', // Align items vertically
+    justifyContent: 'center', // Align items horizontally
+    height: '100%',
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',

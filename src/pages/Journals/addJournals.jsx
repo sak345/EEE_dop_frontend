@@ -1,20 +1,23 @@
 import React from 'react';
 import readXlsxFile from 'read-excel-file';
+import './addJournals.css'
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function AddJournals({ setData }) {
 
-    const handleFileUpload = event => {
+    const handleFileUpload = async event => {
         const file = event.target.files[0];
-        readXlsxFile(file).then((rows) => {
+        readXlsxFile(file).then(async (rows) => {
             // transform array of arrays into array of objects
             let newData = rows.slice(1).map(row => {
                 let obj = {};
                 row.forEach((value, index) => {
                     obj[rows[0][index]] = value;
                 });
-                obj.owner = localStorage.getItem("userId");
+                obj.owner = localStorage.getItem("name");
                 return obj;
             });
 
@@ -30,30 +33,39 @@ function AddJournals({ setData }) {
                 redirect: "follow",
             };
 
-            fetch(process.env.REACT_APP_BACKEND_URL + "journals", requestOptions)
-                .then((response) => {
-                    console.log(response);
-                    response.text();
-                })
-                .then((result) => console.log(result))
-                .catch((error) => console.log('There was an error!', error));
 
-            // send a POST request to your backend
-            // axios.post('/api/journals', newData)
-            //     .then(response => {
-            //         console.log(response.data);
-            //     })
-            //     .catch(error => {
-            //         console.error('There was an error!', error);
-            //     });
+            try {
+                const response = await fetch(process.env.REACT_APP_BACKEND_URL + "journals", requestOptions);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(data)
 
-            setData(newData);
+                // Update data only with the journals returned from the server
+
+                const response2 = await axios.get(process.env.REACT_APP_BACKEND_URL + "journals", {
+                    headers: {
+                        Authorization: localStorage.getItem("Token"),
+                    }
+                });
+                const updatedData = response2.data;
+                toast.success('Journals added successfully!');
+
+                setData(updatedData.journals);
+
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
         });
     };
 
     return (
         <div>
-            <input type="file" onChange={handleFileUpload} style={{ marginBottom: 10 }} />
+            <label htmlFor="file-upload" className="custom-file-upload">
+                Add Journal
+            </label>
+            <input id="file-upload" type="file" onChange={handleFileUpload} style={{ display: 'none' }} />
         </div >
     );
 }
