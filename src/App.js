@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Navigate, Routes, Route } from 'react-router-dom'
 import axios from 'axios'
-
+import { ToastContainer } from 'react-toastify';
 import ProjectPage from './pages/Projects/projectpage'
 import HomePage from './pages/homepage'
-import APage from './pages/2ndpage'
+import AllJournals from './pages/Journals/allJournals'
+import AddJournals from './pages/Journals/addJournals'
 import SubmittedProjectsPage from './pages/Projects/submittedprojects'
 import OngoingProjectsPage from './pages/Projects/ongoingprojects'
 import CompletedProjectsPage from './pages/Projects/completedprojects'
@@ -47,12 +48,13 @@ function App() {
 
   return (
     <BrowserRouter >
+      <ToastContainer />
       <Routes>
         <Route path='/homepage' element={<HomePage />} />
         <Route
           path='/'
           element={
-              <LogIn />
+            <LogIn />
           }
         />
         <Route
@@ -105,9 +107,10 @@ function App() {
             </PrivateRoute>
           }
         />
-      <Route path="/downloadproject" element={<PrivateRoute><DownloadProjectsPage/></PrivateRoute>} /> 
+        <Route path="/downloadproject" element={<PrivateRoute><DownloadProjectsPage /></PrivateRoute>} />
 
-        <Route path='/a' element={<APage />} />
+        <Route path='/journals' element={<AllJournals />} />
+        <Route path='/journals/add' element={<AddJournals />} />
       </Routes>
     </BrowserRouter>
   )

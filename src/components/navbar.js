@@ -1,34 +1,39 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
-import { UserOutlined,  } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import LogoutButton from './logout';
 import styles from '../styles';
+import { Button } from 'antd';
+import { Layout, Menu } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+
+const { Header } = Layout;
 //import './navbar.css'
 
 function Navbar() {
   return (
-      <header>
-        <nav style={styles.nav}>
+    <header>
+      <nav style={styles.nav}>
 
-         <ul style={styles.navb}>
+        <ul style={styles.navb}>
 
-              <div  >
-              <NavLink to="/"><button style={styles.navTitleButton}>EEE Department</button></NavLink>
+          <div  >
+            <NavLink to="/homepage">
+              <Button type="link" style={styles.navTitleButton}>EEE Department</Button>
+            </NavLink>
+          </div>
 
-               </div>
+          <div style={styles.navRight}>
+            <Button type="link" className="nav"><UserOutlined /> User Profile </Button>
+            < LogoutButton />
+          </div>
 
-              <div style={styles.navRight}>
-                 <button className="button nav"><UserOutlined/> User Profile </button>
-                 < LogoutButton />
-               </div>
-                        
-         
-         </ul>
-         
-             
-           </nav>
-     </header>
+
+        </ul>
+
+
+      </nav>
+    </header>
+
 
   );
 }

@@ -24,10 +24,13 @@ function LogIn() {
           localStorage.setItem('email', res.data.email)
           localStorage.setItem('name', res.data.name)
           localStorage.setItem('picture', res.data.picture)
-          console.log(process.env.REACT_APP_BACKEND_URL + 'auth/login')
-          console.log(res.data.email)
+          localStorage.setItem('userId', res.data.id)
           return axios.post(process.env.REACT_APP_BACKEND_URL + 'auth/login', {
             email: res.data.email,
+          }, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`, // Include the access token in the Authorization header
+            },
           })
         })
         .then((res) => {
@@ -39,7 +42,6 @@ function LogIn() {
           })
           localStorage.setItem('Token', 'Bearer ' + res.data.token)
           localStorage.setItem('role', res.data.role)
-          console.log('Login successful')
           setLogged(true)
         })
         .catch((err) => {
@@ -56,7 +58,7 @@ function LogIn() {
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => getToken(codeResponse),
     onError: (error) => console.log('Login Failed:', error),
-    redirect_uri: 'https://eee-dop-frontend.vercel.app',
+    redirect_uri: 'https://eee-dop-frontend.vercel.app'
   })
 
   const logOut = () => {
