@@ -25,6 +25,7 @@ function AllJournals() {
                     'Content-Type': 'application/json',
                 },
             }
+            console.log(config.url);
             axios
                 .request(config)
                 .then((response) => {
