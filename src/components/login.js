@@ -56,6 +56,7 @@ function LogIn() {
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => getToken(codeResponse),
     onError: (error) => console.log('Login Failed:', error),
+    redirect_uri: 'https://eee-dop-frontend.vercel.app',
   })
 
   const logOut = () => {
