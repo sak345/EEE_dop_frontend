@@ -8,11 +8,16 @@ import GlobalStyles from '../../GlobalStyles';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../../components/SearchBar';
+import SelectColumns from '../../components/SelectColumns';
+import { withWidth } from '@material-ui/core';
 
 function AllJournals() {
 
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedColumns, setSelectedColumns] = useState([
+        'SlNo', 'UniqueId', 'Level', 'Authors', 'Article_Title', 'WebLink', 'Scopus', 'Web_Of_Sc', 'PUBMED', 'IEEE', 'Indian_Citation_Index', 'Google_Scholar', 'Year', 'Journal_Name', 'Scopus_Citation', 'WOS_Citation', 'IEEE_Citation', 'ICI_Citation', 'GS_Citation', 'Affiliation', 'Vol_No', 'Issue_No', 'B_Page', 'P_Page', 'SNIP', 'SJR', 'Impact_Factor', 'ISSN', 'ISBN', 'PublicationType', 'owner', 'Actions'
+    ]);
 
     const deleteJournal = async (journal) => {
         try {
@@ -25,7 +30,6 @@ function AllJournals() {
                     'Content-Type': 'application/json',
                 },
             }
-            console.log(config.url);
             axios
                 .request(config)
                 .then((response) => {
@@ -84,11 +88,17 @@ function AllJournals() {
             <Navbar />
             <header>
                 <h1 style={styles.pageTitle}>Journals</h1>
-                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                <AddJournal data={data} setData={setData} />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                    <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />
+                    <AddJournal data={data} setData={setData} />
+                </div>
+                {/* <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />
+                <AddJournal data={data} setData={setData} /> */}
             </header>
 
-            <TableComponent data={dataToDisplay} deleteJournal={deleteJournal} searchTerm={searchTerm} />
+            <TableComponent data={dataToDisplay} deleteJournal={deleteJournal} searchTerm={searchTerm} selectedColumns={selectedColumns} />
         </div>
     );
 }

@@ -79,13 +79,14 @@ const styles = {
     display: 'flex',
     justifyContent: 'left',
     alignItems: 'center',
-    flexGrow: 1,
+    flexGrow: 0.8,
     marginLeft: 15,
   },
 
   navRight: {
     display: 'flex',
     alignItems: 'center',
+    marginLeft: '5px',
   },
 
   container: {
@@ -116,10 +117,6 @@ const styles = {
     marginBottom: 0,
 
   }
-
-
-
-
 
 };
 

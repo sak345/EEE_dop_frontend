@@ -1,12 +1,28 @@
-import { useGoogleLogin, googleLogout } from '@react-oauth/google'
+import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import { Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import './login.css';
 
 function LogIn() {
   const [logged, setLogged] = useState(false)
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('logout') === 'true') {
+      params.delete('logout');
+      toast.success('Logout Successful');
+    }
+    else if (params.get('loginRequired') === 'true') {
+      params.delete('loginRequired');
+      toast.error('You must be logged in first');
+    }
+  }, [location]);
+
   function getToken(user) {
     if (user) {
       const id = toast.loading('Please wait...')
@@ -36,9 +52,10 @@ function LogIn() {
         .then((res) => {
           console.log(res)
           toast.update(id, {
-            render: 'All is good',
+            render: 'Login Succesful!',
             type: 'success',
             isLoading: false,
+            autoClose: 3000,
           })
           localStorage.setItem('Token', 'Bearer ' + res.data.token)
           localStorage.setItem('role', res.data.role)
@@ -46,7 +63,7 @@ function LogIn() {
         })
         .catch((err) => {
           toast.update(id, {
-            render: 'some problem with login',
+            render: err.response.data.message,
             type: 'false',
             isLoading: false,
           })
@@ -58,41 +75,15 @@ function LogIn() {
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => getToken(codeResponse),
     onError: (error) => console.log('Login Failed:', error),
-    redirect_uri: 'https://eee-dop-frontend.vercel.app'
   })
-
-  const logOut = () => {
-    googleLogout()
-    localStorage.removeItem('Token')
-    localStorage.removeItem('email')
-    localStorage.removeItem('name')
-    localStorage.removeItem('picture')
-    console.log('logout successful')
-  }
 
   if (logged) {
     return <Navigate to='/homepage' />
   } else {
     return (
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <ToastContainer />
-        <h2 style={{ color: '#333', fontFamily: 'Arial, sans-serif' }}>
-          React Google Login
-        </h2>
-        <br />
-        <br />
-        <button
-          style={{
-            backgroundColor: '#4285F4',
-            color: '#fff',
-            border: 'none',
-            padding: '10px 20px',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-          }}
-          onClick={() => login()}
-        >
+      <div className="login-container">
+        <h2>Welcome to the EEE Dept. Portal</h2>
+        <button className="login-button" onClick={() => login()}>
           Sign in with Google 🚀
         </button>
       </div>

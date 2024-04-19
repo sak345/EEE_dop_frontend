@@ -16,6 +16,8 @@ import PrivateRoute from './components/privateRoute'
 import './index.css'
 import EnterProjectsPage from './pages/Projects/enterproject'
 import DownloadProjectsPage from './pages/Projects/downloadprojects'
+import NotFoundPage from './pages/NotFoundPage';
+import AddUser from './pages/AddUser';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -50,13 +52,18 @@ function App() {
     <BrowserRouter >
       <ToastContainer />
       <Routes>
-        <Route path='/homepage' element={<HomePage />} />
+        <Route path='/homepage' element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route
           path='/'
           element={
             <LogIn />
           }
         />
+        <Route path="/addUser" element={
+          <PrivateRoute>
+            <AddUser />
+          </PrivateRoute>
+        } />
         <Route
           path='/project'
           element={
@@ -109,8 +116,9 @@ function App() {
         />
         <Route path="/downloadproject" element={<PrivateRoute><DownloadProjectsPage /></PrivateRoute>} />
 
-        <Route path='/journals' element={<AllJournals />} />
-        <Route path='/journals/add' element={<AddJournals />} />
+        <Route path='/journals' element={<PrivateRoute><AllJournals /></PrivateRoute>} />
+        <Route path='/journals/add' element={<PrivateRoute><AddJournals /></PrivateRoute>} />
+        <Route path='*' element={<PrivateRoute><NotFoundPage /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   )

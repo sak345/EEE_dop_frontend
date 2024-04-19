@@ -15,7 +15,8 @@ function SearchBar({ searchTerm, setSearchTerm }) {
             width: '500px',
             margin: '10px 0',
             marginBottom: '-50px',
-            marginLeft: '25px'
+            marginLeft: '25px',
+            height: '40px',
         }}
     />
 }

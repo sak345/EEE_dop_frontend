@@ -31,13 +31,15 @@ const handleDelete = (journal, deleteJournal) => {
     });
 };
 
-function TableComponent({ data, deleteJournal, searchTerm }) {
+function TableComponent({ data, deleteJournal, searchTerm, selectedColumns }) {
+
+
     const columns = React.useMemo(() => {
         if (data && data[0]) {
             return [
                 { Header: 'SlNo', accessor: 'SlNo' },
                 ...Object.keys(data[0] || {})
-                    .filter(key => key !== '_id' && key !== 'SlNo')
+                    .filter(key => key !== '_id' && key !== 'SlNo' && key != '__v')
                     .map(key => ({
                         Header: key, accessor: key, Cell: ({ value }) => (
                             <Highlighter
@@ -51,9 +53,11 @@ function TableComponent({ data, deleteJournal, searchTerm }) {
                 {
                     Header: 'Actions',
                     Cell: ({ row }) => (
-                        <button className="delete-button" onClick={() => handleDelete(row.original, deleteJournal)}>
-                            Delete
-                        </button>
+                        localStorage.getItem('role') === 'admin' && (
+                            <button className="delete-button" onClick={() => handleDelete(row.original, deleteJournal)}>
+                                Delete
+                            </button>
+                        )
                     ),
                 },
             ]
@@ -91,15 +95,18 @@ function TableComponent({ data, deleteJournal, searchTerm }) {
                         {headerGroups.map(headerGroup => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? ' 🔽'
-                                                    : ' 🔼'
-                                                : ''}
-                                        </span>
-                                    </th>
+                                    (selectedColumns.includes(column.id) || column.id === 'Actions') && (
+                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                            {column.render('Header')}
+                                            <span>
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? ' 🔽'
+                                                        : ' 🔼'
+                                                    : ''}
+                                            </span>
+                                        </th>
+                                    )
                                 ))}
                             </tr>
                         ))}
@@ -110,14 +117,24 @@ function TableComponent({ data, deleteJournal, searchTerm }) {
                             return (
                                 <tr {...row.getRowProps()} >
                                     {row.cells.map(cell => (
-                                        <td {...cell.getCellProps()}>
-                                            <div style={{
-                                                maxHeight: "120px",
-                                                overflowY: "auto",
-                                            }}>
-                                                {cell.render('Cell')}
-                                            </div>
-                                        </td>
+                                        (selectedColumns.includes(cell.column.id) || cell.column.id === 'Actions') && (
+                                            <td {...cell.getCellProps()}>
+                                                <div style={{
+                                                    maxHeight: "120px",
+                                                    overflowY: "auto",
+                                                }}>
+                                                    {cell.render('Cell')}
+                                                </div>
+                                            </td>
+                                        )
+                                        // <td {...cell.getCellProps()}>
+                                        //     <div style={{
+                                        //         maxHeight: "120px",
+                                        //         overflowY: "auto",
+                                        //     }}>
+                                        //         {cell.render('Cell')}
+                                        //     </div>
+                                        // </td>
                                     ))}
                                 </tr>
                             );

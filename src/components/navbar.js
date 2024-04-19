@@ -23,10 +23,14 @@ function Navbar() {
           </div>
 
           <div style={styles.navRight}>
+            {localStorage.getItem('role') === 'admin' && (
+              <NavLink to="/addUser">
+                <Button type="link" className="nav">Add User</Button>
+              </NavLink>
+            )}
             <Button type="link" className="nav"><UserOutlined /> User Profile </Button>
             < LogoutButton />
           </div>
-
 
         </ul>
 
