@@ -1,18 +1,19 @@
-
 const styles = {
+
+  alignItems: window.innerWidth > 600 ? 'center' : 'flex-start',
 
   navTitleButton: {
     display: 'flex',
     alignItems: 'center', // Align items vertically
     justifyContent: 'center', // Align items horizontally
     height: '100%',
-    fontSize: 32,
+    fontSize: window.innerWidth > 600 ? 32 : 15,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
     textShadow: '1px 1px #ccc',
     backgroundColor: '#f2f2f2',
-    padding: 20,
+    padding: window.innerWidth > 600 ? 20 : 10,
     borderRadius: 20,
     marginTop: 10,
     marginBottom: 10,
@@ -21,7 +22,7 @@ const styles = {
   },
 
   pageTitle: {
-    fontSize: 32,
+    fontSize: window.innerWidth > 600 ? 32 : 24,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',

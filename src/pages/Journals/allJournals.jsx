@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../../components/SearchBar';
 import SelectColumns from '../../components/SelectColumns';
-import { withWidth } from '@material-ui/core';
+import * as XLSX from 'xlsx';
 
 function AllJournals() {
 
@@ -18,6 +18,22 @@ function AllJournals() {
     const [selectedColumns, setSelectedColumns] = useState([
         'SlNo', 'UniqueId', 'Level', 'Authors', 'Article_Title', 'WebLink', 'Scopus', 'Web_Of_Sc', 'PUBMED', 'IEEE', 'Indian_Citation_Index', 'Google_Scholar', 'Year', 'Journal_Name', 'Scopus_Citation', 'WOS_Citation', 'IEEE_Citation', 'ICI_Citation', 'GS_Citation', 'Affiliation', 'Vol_No', 'Issue_No', 'B_Page', 'P_Page', 'SNIP', 'SJR', 'Impact_Factor', 'ISSN', 'ISBN', 'PublicationType', 'owner', 'Actions'
     ]);
+
+    const downloadExcel = () => {
+        const dataWithSelectedColumns = data.map(item => {
+            let newItem = {};
+            selectedColumns.forEach(column => {
+                if (column !== 'Actions') {
+                    newItem[column] = item[column];
+                }
+            });
+            return newItem;
+        });
+        const ws = XLSX.utils.json_to_sheet(dataWithSelectedColumns);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, "Journals.xlsx");
+    };
 
     const deleteJournal = async (journal) => {
         try {
@@ -60,19 +76,39 @@ function AllJournals() {
             }
         };
 
-        toast.info('Fetching data...');
+        const fetchPromise = axios.request(config);
 
-        axios
-            .request(config)
+        toast.promise(
+            fetchPromise,
+            {
+                pending: 'Fetching data...',
+                success: 'Data fetched successfully',
+                error: 'Error in fetching data'
+            }
+        );
+
+        fetchPromise
             .then((response) => {
                 setData(response.data.journals);
-                toast.dismiss();
             })
             .catch((error) => {
-                toast.error(`Error in fetching data`);
                 console.log("Error in reading data", error);
             });
     }, []);
+
+    //     toast.info('Fetching data...');
+
+    //     axios
+    //         .request(config)
+    //         .then((response) => {
+    //             setData(response.data.journals);
+    //             toast.dismiss();
+    //         })
+    //         .catch((error) => {
+    //             toast.error(`Error in fetching data`);
+    //             console.log("Error in reading data", error);
+    //         });
+    // }, []);
 
     const filteredData = data.filter(journal =>
         Object.values(journal).some(val =>
@@ -88,14 +124,55 @@ function AllJournals() {
             <Navbar />
             <header>
                 <h1 style={styles.pageTitle}>Journals</h1>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {/* <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    '@media (min-width: 600px)': {
+                        flexDirection: 'row',
+                    }
+                }}>
+                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} style={{ marginBottom: 10 }} />
+                    <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} style={{ marginBottom: 10, marginLeft: 10 }} />
+                    <AddJournal data={data} setData={setData} />
+                    <button onClick={downloadExcel} style={{
+                        backgroundColor: '#4CAF50',
+                        border: 'none',
+                        color: 'white',
+                        padding: '15px 32px',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        fontSize: '16px',
+                        margin: '4px 2px',
+                        marginRight: '100px',
+                        cursor: 'pointer',
+                        borderRadius: '12px'
+                    }}>Download</button>
+                </div> */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                     <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />
-                    <AddJournal data={data} setData={setData} />
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <button onClick={downloadExcel} style={{
+                            backgroundColor: '#4CAF50', /* Green */
+                            border: 'none',
+                            color: 'white',
+                            padding: '15px 32px',
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                            fontSize: '16px',
+                            margin: '4px 2px',
+                            marginRight: '500px',
+                            cursor: 'pointer',
+                            borderRadius: '12px'
+                        }}>Download</button>
+                        <AddJournal data={data} setData={setData} />
+
+                    </div>
                 </div>
-                {/* <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />
-                <AddJournal data={data} setData={setData} /> */}
             </header>
 
             <TableComponent data={dataToDisplay} deleteJournal={deleteJournal} searchTerm={searchTerm} selectedColumns={selectedColumns} />

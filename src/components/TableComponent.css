@@ -50,6 +50,16 @@
 .delete-button:hover {
     background-color: #d32f2f;
 }
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+    @media (min-width: 600px) {
+        flex-direction: row;
+    }
+}
 .pagination-button {
     background-color: #009879; /* Green */
     border: none;
@@ -61,6 +71,10 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    @media (max-width: 600px) {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
 }
 
 .pagination-button:disabled {
@@ -71,18 +85,39 @@
 .page-info {
     font-size: 1.2em;
     color: #009879; /* Green */
+    display: block;
+    margin-bottom: 10px;
 }
 
 .page-input {
     margin-left: 10px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+@media (min-width: 600px) {
+    .page-info,
+    .page-input {
+        display: inline;
+        margin-bottom: 0;
+    }
 }
 
 .page-number-input {
-    width: 100px;
+    width: 100%;
     padding: 5px;
     border: 2px solid #009879; /* Green */
     border-radius: 5px;
     font-size: 1em;
+
+    @media (max-width: 600px) {
+        width: 80px;
+        font-size: 0.8em;
+    }
+
+    @media (min-width: 600px) {
+        width: 100px;
+    }
 }
 
 .no-data-message {

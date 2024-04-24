@@ -88,8 +88,8 @@ function TableComponent({ data, deleteJournal, searchTerm, selectedColumns }) {
     }
 
     return (
-        <div style={{ padding: 24, minHeight: 380 }}>
-            <div style={{ maxWidth: "1300px", overflowX: "auto" }}>
+        <div style={{ padding: '24px 24px 24px 0', minHeight: 380 }}>
+            <div style={{ maxWidth: "100%", overflowX: "auto" }}>
                 <table {...getTableProps()} className="styled-table">
                     <thead>
                         {headerGroups.map(headerGroup => (
@@ -143,7 +143,7 @@ function TableComponent({ data, deleteJournal, searchTerm, selectedColumns }) {
                 </table>
             </div>
             {data.length > 0 && (
-                <div style={{ marginTop: 10, marginLeft: 425 }}>
+                <div className="pagination-container" >
                     <button className="pagination-button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                         {'<<'}
                     </button>{' '}

@@ -1,17 +1,26 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './login.css';
 
 function LogIn() {
+  const navigate = useNavigate();
   const [logged, setLogged] = useState(false)
   const location = useLocation();
 
   useEffect(() => {
+    const token = localStorage.getItem('Token');
+    const role = localStorage.getItem('role');
+
+    if (token && role) {
+      setLogged(true);
+      toast.success("You're already logged in.");
+      navigate('/homepage', { replace: true });
+    }
     const params = new URLSearchParams(location.search);
     if (params.get('logout') === 'true') {
       params.delete('logout');
@@ -20,6 +29,9 @@ function LogIn() {
     else if (params.get('loginRequired') === 'true') {
       params.delete('loginRequired');
       toast.error('You must be logged in first');
+    }
+    if (location.state && location.state.sessionExpired) {
+      toast.error('Your session has expired.');
     }
   }, [location]);
 
@@ -41,6 +53,17 @@ function LogIn() {
           localStorage.setItem('name', res.data.name)
           localStorage.setItem('picture', res.data.picture)
           localStorage.setItem('userId', res.data.id)
+          setTimeout(() => {
+            localStorage.removeItem('email');
+            localStorage.removeItem('name');
+            localStorage.removeItem('picture');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('Token');
+            localStorage.removeItem('role');
+            setLogged(false);
+            // Redirect the user to the login page or refresh the page
+            navigate('/', { state: { sessionExpired: true } });
+          }, 60 * 1000 * 60);
           return axios.post(process.env.REACT_APP_BACKEND_URL + 'auth/login', {
             email: res.data.email,
           }, {

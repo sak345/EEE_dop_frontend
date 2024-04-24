@@ -39,7 +39,9 @@ function SelectColumns({ selectedColumns, setSelectedColumns }) {
         { value: 'Actions', label: 'Actions' },
     ];
     return (
-        <div style={{}}>
+        <div style={{
+            marginBottom: '15px',
+        }}>
             <Select
                 isMulti
                 options={columnOptions}
@@ -83,7 +85,7 @@ function SelectColumns({ selectedColumns, setSelectedColumns }) {
                     ),
                 }}
             />
-        </div>
+        </div >
     )
 }
 export default SelectColumns;
