@@ -1,0 +1,22 @@
+.no-data-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: #444;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .no-data-message h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+  }
+  
+  .no-data-message p {
+    font-size: 1.2em;
+    color: #666;
+  }
