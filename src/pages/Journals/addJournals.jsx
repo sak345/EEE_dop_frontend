@@ -81,7 +81,7 @@ function AddJournals({ data, setData }) {
     return (
         <div>
             <label htmlFor="file-upload" className="custom-file-upload">
-                Add Journal
+                Upload
             </label>
             <input id="file-upload" type="file" onChange={handleFileUpload} style={{ display: 'none' }} />
         </div >

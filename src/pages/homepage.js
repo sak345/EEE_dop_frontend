@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/navbar';
 import styles from '../styles';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './homepage.css';
 
 
 function HomePage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('notAuthorized') === 'true') {
+      params.delete('notAuthorized');
+      toast.error('You are not authorized to access that page.');
+    }
+
+    navigate({
+      pathname: location.pathname,
+      search: params.toString(),
+    }, { replace: true });
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -34,7 +53,7 @@ function HomePage() {
               <button className="btn">View Awards</button>
             </div>
           </div></Link>
-          <Link to="/c"><div className="card research">
+          <Link to="/guestlectures"><div className="card research">
             <div className="content">
               <h2 className="title">Guest Lectures</h2>
               <p className="copy"></p>

@@ -9,7 +9,10 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../../components/SearchBar';
 import SelectColumns from '../../components/SelectColumns';
+import { Typography, Box } from '@material-ui/core';
 import * as XLSX from 'xlsx';
+import Count from '../../components/Count.jsx'
+import ManualAddJournal from './manualAddJournal.jsx';
 
 function AllJournals() {
 
@@ -59,7 +62,7 @@ function AllJournals() {
             axios
                 .request(config)
                 .then((response) => {
-                    if (response.status == 200) {
+                    if (response.status === 200) {
                         toast.success('Journal deleted successfully');
                     }
                     const updatedData = data.filter(item => item._id !== journal._id);
@@ -91,9 +94,9 @@ function AllJournals() {
         toast.promise(
             fetchPromise,
             {
-                pending: 'Fetching data...',
-                success: 'Data fetched successfully',
-                error: 'Error in fetching data'
+                pending: 'Please wait...',
+                success: 'Data loaded successfully',
+                error: 'Error in loading data'
             }
         );
 
@@ -119,32 +122,45 @@ function AllJournals() {
             <GlobalStyles />
             <Navbar />
             <header>
-                <h1 style={styles.pageTitle}>Journals</h1>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                    <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3 }}>
+                    <Typography variant="h3" component="h1" gutterBottom>
+                        Journals
+                    </Typography>
+                </Box>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '0 20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <button onClick={downloadExcel} style={{
-                            backgroundColor: '#4CAF50', /* Green */
-                            border: 'none',
-                            color: 'white',
-                            padding: '15px 32px',
-                            textAlign: 'center',
-                            textDecoration: 'none',
-                            display: 'inline-block',
-                            fontSize: '16px',
-                            margin: '4px 2px',
-                            marginRight: '500px',
-                            cursor: 'pointer',
-                            borderRadius: '12px'
-                        }}>Download</button>
-                        <AddJournal data={data} setData={setData} />
-
+                        {data && data.length !== 0 && <SelectColumns selectedColumns={selectedColumns} setSelectedColumns={setSelectedColumns} />}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            {localStorage.getItem('role') === 'admin' && <AddJournal data={data} setData={setData} />}
+                            <ManualAddJournal data={data} setData={setData} />
+                        </div>
                     </div>
+                    {data && data.length !== 0 && <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                        <Count data={dataToDisplay.length} />
+                    </div>}
+
                 </div>
             </header>
 
             <TableComponent data={dataToDisplay} deleteJournal={deleteJournal} searchTerm={searchTerm} selectedColumns={selectedColumns} />
+            {data && data.length !== 0 && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button onClick={downloadExcel} style={{
+                    backgroundColor: '#4CAF50',
+                    border: 'none',
+                    color: 'white',
+                    padding: '15px 32px',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    borderRadius: '12px',
+                    marginTop: '-70px',
+                    marginRight: '25px',
+                    marginBottom: '20px'
+                }}>Download</button>
+            </div>}
         </div>
     );
 }

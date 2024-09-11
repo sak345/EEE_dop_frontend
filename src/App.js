@@ -18,6 +18,10 @@ import DownloadProjectsPage from './pages/Projects/downloadprojects'
 import NotFoundPage from './pages/NotFoundPage';
 import AddUser from './pages/AddUser';
 import AllAwards from './pages/Awards'
+import AllGuestLectures from './pages/GuestLectures'
+import AdminAccessRequests from './pages/AdminAccessRequests'
+import AdminRoute from './components/adminRoute';
+
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -60,9 +64,11 @@ function App() {
           }
         />
         <Route path="/addUser" element={
-          <PrivateRoute>
-            <AddUser />
-          </PrivateRoute>
+          <AdminRoute>
+            <PrivateRoute>
+              <AddUser />
+            </PrivateRoute>
+          </AdminRoute>
         } />
         <Route
           path='/project'
@@ -118,6 +124,8 @@ function App() {
 
         <Route path='/journals' element={<PrivateRoute><AllJournals /></PrivateRoute>} />
         <Route path='/awards' element={<PrivateRoute><AllAwards /></PrivateRoute>} />
+        <Route path='/guestlectures' element={<PrivateRoute><AllGuestLectures /></PrivateRoute>} />
+        <Route path="/admin/access-requests" element={<AdminRoute><PrivateRoute><AdminAccessRequests /></PrivateRoute></AdminRoute>} />
         <Route path='*' element={<PrivateRoute><NotFoundPage /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>

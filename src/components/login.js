@@ -25,10 +25,18 @@ function LogIn() {
     if (params.get('logout') === 'true') {
       params.delete('logout');
       toast.success('Logout Successful');
+      navigate({
+        pathname: location.pathname,
+        search: params.toString(),
+      }, { replace: true });
     }
     else if (params.get('loginRequired') === 'true') {
       params.delete('loginRequired');
       toast.error('You must be logged in first');
+      navigate({
+        pathname: location.pathname,
+        search: params.toString(),
+      }, { replace: true });
     }
     if (location.state && location.state.sessionExpired) {
       toast.error('Your session has expired.');
@@ -38,7 +46,7 @@ function LogIn() {
   function getToken(user) {
     if (user) {
       const id = toast.loading('Please wait...')
-      axios
+      const res = axios
         .get(
           `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
           {
@@ -73,7 +81,7 @@ function LogIn() {
           })
         })
         .then((res) => {
-          console.log(res)
+          toast.dismiss(id)
           toast.update(id, {
             render: 'Login Succesful!',
             type: 'success',
@@ -84,14 +92,94 @@ function LogIn() {
           localStorage.setItem('role', res.data.role)
           setLogged(true)
         })
-        .catch((err) => {
-          toast.update(id, {
-            render: err.response.data.message,
-            type: 'false',
-            isLoading: false,
-          })
-          console.log(err)
-        })
+        .catch(async (err) => {
+          if (err.response && err.response.status === 401) {
+            // User not authorized, create access request
+            try {
+              // Assuming res is defined in the try block where the Google API call is made
+              const res = await axios.get(
+                `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    Accept: 'application/json',
+                  },
+                }
+              );
+
+              const myHeaders = {
+                "Authorization": `Bearer ${user.access_token}`,
+                "Content-Type": "application/json"
+              };
+
+              const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify({
+                  name: res.data.name,
+                  email: res.data.email,
+                }),
+                redirect: "follow",
+              };
+
+              const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}admin/access-requests`, requestOptions);
+
+              // Check if the response is OK (status code 200-299)
+              if (!response.ok) {
+                const errorText = await response.text(); // Read the response as text
+                throw new Error(`Error: ${response.status} - ${errorText}`);
+              }
+
+              const data = await response.json();
+
+              if (data.success) {
+                toast.update(id, {
+                  render: 'Access request sent. Please wait for admin approval.',
+                  type: 'info',
+                  isLoading: false,
+                  autoClose: 5000,
+                });
+              } else {
+                toast.update(id, {
+                  render: 'Failed to send access request',
+                  type: 'error',
+                  isLoading: false,
+                  autoClose: 3000,
+                });
+              }
+            } catch (accessErr) {
+              let errorMessage = 'Error sending access request';
+              if (accessErr.response && accessErr.response.data && accessErr.response.data.message) {
+                errorMessage = accessErr.response.data.message;
+              } else if (accessErr.message) {
+                try {
+                  // Attempt to parse the nested error message
+                  const parsedError = JSON.parse(accessErr.message.split(' - ')[1]);
+                  if (parsedError.message) {
+                    errorMessage = parsedError.message;
+                  }
+                } catch (parseErr) {
+                  errorMessage = accessErr.message;
+                }
+              }
+              toast.update(id, {
+                render: errorMessage,
+                type: 'error',
+                isLoading: false,
+                autoClose: 5000,
+              });
+              console.error('Error sending access request:', accessErr);
+            }
+          } else {
+            toast.update(id, {
+              render: err.response.data.message,
+              type: 'error',
+              isLoading: false,
+              autoClose: 3000,
+            });
+            console.error('Login failed:', err);
+          }
+        });
     }
   }
 

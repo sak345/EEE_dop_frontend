@@ -6,43 +6,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import GlobalStyles from '../../GlobalStyles';
 import styles from '../../styles';
 import Navbar from '../../components/navbar';
-import NoDataMessage from '../../components/NoDataMessage.jsx';
-import { Container, Typography, Card, CardContent, Grid, Select, MenuItem, CardActions, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Select, MenuItem, Typography, Box } from '@material-ui/core';
 import SearchBar from '../../components/SearchBar';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-const useStyles = makeStyles((theme) => ({
-    select: {
-        minWidth: 200,
-        backgroundColor: 'white',
-        margin: theme.spacing(1),
-    },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-}));
-
-
-const handleDelete = (id, deleteAward) => {
-    confirmAlert({
-        title: 'Confirm to delete',
-        message: 'Are you sure you want to delete this award?',
-        buttons: [
-            {
-                label: 'Yes',
-                onClick: () => deleteAward(id)
-            },
-            {
-                label: 'No',
-                onClick: () => { }
-            }
-        ]
-    });
-};
+import Count from '../../components/Count.jsx'
+import useStyles from './styles.js';
+import ManualAddAward from './manualAddAward.jsx';
+import AwardTile from './awardTile.jsx';
+import * as XLSX from 'xlsx';
 
 function AwardsPage() {
     const classes = useStyles();
@@ -75,9 +46,9 @@ function AwardsPage() {
         toast.promise(
             fetchPromise,
             {
-                pending: 'Fetching data...',
-                success: 'Data fetched successfully',
-                error: 'Error in fetching data'
+                pending: 'Please wait...',
+                success: 'Data loaded successfully',
+                error: 'Error in loading data'
             }
         );
 
@@ -90,35 +61,26 @@ function AwardsPage() {
             });
     };
 
-    const deleteAward = async (id) => {
-        try {
-            //? api patch req
-            let config = {
-                method: 'delete',
-                url: `${process.env.REACT_APP_BACKEND_URL}awards/${id}`,
-                headers: {
-                    Authorization: localStorage.getItem('Token'),
-                    'Content-Type': 'application/json',
-                },
-            }
-            axios
-                .request(config)
-                .then((response) => {
-                    if (response.status == 200) {
-                        toast.success('Award deleted successfully');
-                    }
-                    const updatedData = awards.filter(item => item._id !== id);
-                    setAwards(updatedData);
-                })
-                .catch((error) => {
-                    console.log(error)
-                    const errorMessage = error.response ? error.response.data : error.message;
-                    toast.error(`Error deleting award: ${errorMessage}`);
-                })
-        } catch (err) {
-            console.error(err)
-            toast.error(`Error deleting award: ${err.message}`);
+    const countInSelectedSheet = awards.filter(award =>
+        award.sheetName === selectedSheet && JSON.stringify(award).toLowerCase().includes(searchTerm.toLowerCase())
+    ).length;
+
+    const downloadExcel = () => {
+        const filteredData = awards.filter(award =>
+            award.sheetName === selectedSheet && Object.values(award).some(val =>
+                val !== null && val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+
+        if (filteredData.length === 0) {
+            toast.error('No awards to download.');
+            return;
         }
+
+        const ws = XLSX.utils.json_to_sheet(filteredData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, selectedSheet);
+        XLSX.writeFile(wb, `Awards_${selectedSheet}.xlsx`);
     };
 
     return (
@@ -126,50 +88,57 @@ function AwardsPage() {
             <GlobalStyles />
             <Navbar />
             <header>
-                <h1 style={styles.pageTitle}>Awards</h1>
-                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Select
-                        value={selectedSheet}
-                        onChange={(e) => setSelectedSheet(e.target.value)}
-                        className={classes.select}
-                        placeholder='Select Year'
-                        style={{
-                            height: '40px', padding: '0 10px', borderRadius: '0.8rem', margin: '10px 2px',
-                        }}
-                    >
-                        {sheetNames.map((name) => (
-                            <MenuItem key={name} value={name}>{name}</MenuItem>
-                        ))}
-                    </Select>
-                    <AddAwards data={awards} setData={setAwards} />
-                </div>
-                <Container style={{ maxWidth: '100%', justifyContent: 'space-between' }}>
-                    {awards.length === 0 ? (
-                        <NoDataMessage data={"Award"} />
-                    ) : (
-                        <Grid container spacing={3} style={{ padding: '20px' }}>
-                            {awards.filter(award => award.sheetName === selectedSheet && JSON.stringify(award).toLowerCase().includes(searchTerm.toLowerCase())).map((award) => (
-                                <Grid item xs={12} sm={6} md={4} key={award._id}>
-                                    <Card style={{ height: '300px', overflow: 'auto', margin: '10px', padding: '20px', borderRadius: '15px' }}>
-                                        <CardContent>
-                                            <Typography variant="h5" style={{ marginBottom: 20 }}>{award.facultyName}</Typography>
-                                            {award.award && <Typography><strong>Award:</strong> {award.award}</Typography>}
-                                            {award.awardingAgency && <Typography><strong>Awarding Agency:</strong> {award.awardingAgency}</Typography>}
-                                            {award.date && <Typography><strong>Date:</strong> {award.date}</Typography>}
-                                            {award.document && <Typography><strong>Document:</strong> {award.document}</Typography>}
-                                        </CardContent>
-                                        {localStorage.getItem('role') === 'admin' && (
-                                            <CardActions>
-                                                <Button size="small" color="secondary" onClick={() => handleDelete(award._id, deleteAward)}>Delete</Button>
-                                            </CardActions>
-                                        )}
-                                    </Card>
-                                </Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3 }}>
+                    <Typography variant="h3" component="h1" gutterBottom>
+                        Awards
+                    </Typography>
+                </Box>
+
+                <div style={{ display: 'flex', flexDirection: 'column', padding: '0 30px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        {awards && awards.length !== 0 && <Select
+                            value={selectedSheet}
+                            onChange={(e) => setSelectedSheet(e.target.value)}
+                            className={classes.select}
+                            placeholder='Select Year'
+                            style={{
+                                width: '150px', height: '40px', padding: '0 10px', borderRadius: '0.8rem',
+                            }}
+                        >
+                            {sheetNames.map((name) => (
+                                <MenuItem key={name} value={name}>{name}</MenuItem>
                             ))}
-                        </Grid>
-                    )}
-                </Container >
+                        </Select>}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            {localStorage.getItem('role') === 'admin' &&
+                                <AddAwards data={awards} setData={setAwards} style={{ width: '80px' }} />
+                            }
+                            <ManualAddAward setAwards={setAwards} />
+                        </div>
+                    </div>
+                    {awards && awards.length !== 0 && <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                        <Count data={countInSelectedSheet} />
+                    </div>}
+                </div>
+
+                <AwardTile awards={awards} setAwards={setAwards} selectedSheet={selectedSheet} searchTerm={searchTerm} />
+                {awards && awards.length !== 0 && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button onClick={downloadExcel} style={{
+                        backgroundColor: '#4CAF50',
+                        border: 'none',
+                        color: 'white',
+                        padding: '15px 32px',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                        borderRadius: '12px',
+                        marginRight: '55px',
+                        marginBottom: '20px'
+                    }}>Download</button>
+                </div>}
             </header>
         </div>
 

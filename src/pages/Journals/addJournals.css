@@ -9,10 +9,10 @@
     background-color: #f3f3f3; /* Light gray */
     text-align: center;
     text-decoration: none;
-    position: absolute;
     right: 0;
     margin-right: 35px;
     margin-top: 8px;
+    position: relative;
 }
 
 .custom-file-upload:hover {

@@ -32,7 +32,7 @@ const styles = {
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 15,
-
+    backgroundColor: '#d5d0d6'
   },
 
   nav: {

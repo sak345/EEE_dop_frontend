@@ -1,5 +1,4 @@
 import React from 'react';
-import readXlsxFile from 'read-excel-file';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -116,7 +115,7 @@ function AddAwards({ data, setData }) {
     };
 
     return (
-        <div style={{ marginBottom: 90, position: 'relative' }}>
+        <div style={{ position: 'relative' }}>
             <label htmlFor="file-upload" className="custom-file-upload">
                 Upload
             </label>

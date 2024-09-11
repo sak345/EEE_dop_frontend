@@ -73,7 +73,7 @@ function SelectColumns({ selectedColumns, setSelectedColumns }) {
                         ...provided,
                         overflow: 'auto',
                         maxWidth: '650px',
-                        maxHeight: '25px', // Adjust this value to change the maximum height of the control bar
+                        maxHeight: '40px', // Adjust this value to change the maximum height of the control bar
                     }),
                 }}
                 components={{
