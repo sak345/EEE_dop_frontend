@@ -29,14 +29,14 @@ function ProjectHeader() {
                     <li>
                         <NavLink to="/completedproject"><button className="button nav">Completed Projects</button></NavLink>
                     </li>
-                    <li style={styles.lastChild}>
+                    {localStorage.getItem('role') === 'admin' && <li style={styles.lastChild}>
                         <NavLink to="/downloadproject"><button className="button nav">Downld Projects</button></NavLink>
-                    </li>
+                    </li>}
                 </ul>
-            
+
             </nav>
         </header>
     );
-  }
-  
-  export default ProjectHeader;
+}
+
+export default ProjectHeader;

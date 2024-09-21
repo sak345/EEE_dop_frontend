@@ -1,323 +1,136 @@
 // import React from 'react';
 import React, { useEffect, useState } from "react";
-
 import Navbar from '../../components/navbar';
 import ProjectHeader from '../../components/projectheader';
-import Inputform from '../../components/form';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import axios from "axios";
-import { NavLink } from "react-router-dom";
 import styles from '../../styles';
-
-
-const { Header, Content, Footer } = Layout;
-
-// const handleOptionChange = (id, value) => {
-
-//   //setProjectStatus(value)
-//   // Send PATCH request to server with _id and selected option
-//   let data = JSON.stringify({
-//     "_id": id,
-//     "status_p": value
-//   });
-
-
-//   try {
-//     //? api patch req
-//     let config = {
-//       method: 'patch',
-//       url: process.env.REACT_APP_BACKEND_URL+'paper/update',
-//       headers: { 
-//         'Authorization': localStorage.getItem('Token'),
-//         'Content-Type': 'application/json'
-//       },
-//       data: data
-//     };
-
-//     axios.request(config)
-//       .then((response) => {
-//       // console.log(JSON.stringify(response.data));
-//       // setData(response.data.papers)
-//       // console.log(response.data.papers)
-//       if(response.status == 200) {
-//         console.log("updated successfully")
-//       }
-//       // window.location.reload(); // Reload the page after successful request
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-const handleOptionChange = (id, value) => {
-  if(value === "accepted" ){
-    value = "ongoing";
-  }
-
-  if(value!==""){
-    //setProjectStatus(value)
-    // Send PATCH request to server with _id and selected option
-    let data = JSON.stringify({
-      "_id": id,
-      "status_p": value
-    });
-
-
-    try {
-      //? api patch req
-      let config = {
-        method: 'patch',
-        url: process.env.REACT_APP_BACKEND_URL+'paper/update',
-        headers: { 
-          'Authorization': localStorage.getItem('Token'),
-          'Content-Type': 'application/json'
-        },
-        data: data
-      };
-
-      axios.request(config)
-        .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        // setData(response.data.papers)
-        // console.log(response.data.papers)
-        if(response.status == 200) {
-          console.log("updated successfully")
-        }
-        window.location.reload(); // Reload the page after successful request
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-};
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CompletedProjectsPage() {
 
   const [data, setData] = useState([]);
-  const [projectstatus, setProjectStatus] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [projects, setProjects] = useState([]);
 
-  // useEffect(() => {
-
-  //   let confi = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: process.env.REACT_APP_BACKEND_URL+'user/me',
-  //     headers: { 
-  //       'Authorization': localStorage.getItem('Token')
-  //     },
-  //   };
-  //   // Make a GET request to the server to get the user's role
-  //   axios.get(confi).then((response) => {
-  //     const { role } = response.data;
-
-  //     // If the user is an admin, set the state to true
-  //     if (role === 'admin') {
-  //       setIsAdmin(true);
-  //     }
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
-  // }, []);
   useEffect(() => {
-    // Check local storage for the JSON file
-    
-     const userData = localStorage.getItem('role');
-    if (userData) {
-      try {
-        // Parse the JSON data
-        console.log(userData) 
-              
-        if (userData=='admin') {
-          // Set the user role in the component's state
-          setIsAdmin(true);
+    const fetchData = async () => {
+      const role = localStorage.getItem('role');
+      const url = role === 'admin'
+        ? `${process.env.REACT_APP_BACKEND_URL}admin/paper/getall`
+        : `${process.env.REACT_APP_BACKEND_URL}paper/getall`;
+
+      const myHeaders = new Headers();
+      myHeaders.append('Authorization', localStorage.getItem('Token'));
+
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+
+      const fetchPromise = fetch(url, requestOptions);
+
+      toast.promise(
+        fetchPromise,
+        {
+          pending: 'Fetching papers...',
+          success: 'Papers fetched successfully',
+          error: 'Error fetching papers'
         }
+      );
+
+      try {
+        const response = await fetchPromise;
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        setData(result.papers);
+        setProjects(result.papers.map(paper => ({
+          id: paper._id,
+          projectstatus: "",
+        })));
+        toast.dismiss();
       } catch (error) {
-        console.error('Error parsing JSON data:', error);
+        console.error('Error:', error);
+        toast.error(`Error fetching papers: ${error.message}`);
       }
-    }
-  }, ) 
-  
-  useEffect(() => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: process.env.REACT_APP_BACKEND_URL + "admin/paper/getall",
-      headers: {
-        Authorization: localStorage.getItem("Token"),
-      },
     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        setData(response.data.papers);
-        console.log(response.data.papers);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    fetchData();
   }, []);
 
-  
-
-  if(isAdmin)
-  {
-    return (
-      <div>
-          <Navbar/>
-          {/* <ProjectHeader/> */}
-  
-          <header >
-              <h1 style={styles.pageTitle}>Projects</h1>
-  
-              <nav style={styles.nav}>
-                  <ul style={styles.navContainer}>
-                      <li style={styles.firstChild}>
-                          <NavLink to="/enterproject"><button className="button-nav">Enter Project</button></NavLink>
-                      </li>
-                      <li>
-                          <NavLink to="/project"><button className="button-nav">All Projects</button></NavLink>
-                      </li>
-                      <li>
-                          <NavLink to="/submittedproject"><button className="button-nav">Submitted Projects</button></NavLink>
-                      </li>
-                      <li>
-                          <NavLink to="/rejectedproject"><button className="button-nav">Rejected Projects</button></NavLink>
-                      </li>
-                      <li>
-                          <NavLink to="/ongoingproject"><button className="button-nav">Ongoing Projects</button></NavLink>
-                      </li>
-                      <li>
-                          <NavLink to="/completedproject"><button className="button-nav-1">Completed Projects</button></NavLink>
-                      </li>
-                      <li style={styles.lastChild}>
-                          <NavLink to="/downloadproject"><button className="button-nav">Download Projects</button></NavLink>
-                      </li>
-                  </ul>
-              
-              </nav>
-          </header>
-  
-          <div className="site-layout" style={{ padding: '0 50px' }}>
-          <div style={{ padding: 24, minHeight: 380 }}>
-          <table>
-              <thead>
-                <tr>
-                  <th>S. No</th>
-                  <th>Funding Agency</th>
-                  <th>Organization</th>
-                  <th>Title</th>
-                  <th>PI</th>
-                  <th>Co-PI</th>
-                  <th>Amount</th>
-                  <th>Submission Date</th>
-                  <th>Approval Date</th>
-  
-                  {/* <th>Duration</th> */}
-                  <th>Start Date</th>
-                  <th>Completed Date</th>
-                  <th>Current Status</th>
-                  <th>Edit Status</th>
-                  <th>Update</th>
-  
-  
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((data, index) => {
-                  if (data.status_p === "completed") {
-                    return (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{data.funding_agency}</td>
-                        <td>{data.agency_type}</td>
-                        <td className="_status" >{data.title}</td>
-                        <td className="_status">{data.PI}</td>
-                        <td>{data.coPI}</td>
-                        <td>{data.amount}</td>
-                        <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
-                        <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
-                       
-                        <td>{data.start_date?data.start_date.substring(0, 10):''}</td>
-                      <td>{data.completed_date?data.completed_date.substring(0, 10):''}</td>
-                        <td className="_status">{data.status_p}</td>
-                        <td><select style={styles.dropMenu}  data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
-                            <option value="ongoing">Ongoing</option>
-                            <option value="completed">Completed</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="submitted">Submitted</option>
-                            </select>
-                         </td>
-                         <td> <button type="submit" onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
-  
-  
-                      </tr>
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-              </tbody>
-            </table>
-            </div>
-  
-         
-        </div>
-      </div>
+  const handleInputChange = (id, field, value) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === id ? { ...project, [field]: value } : project
+      )
     );
-  }
+  };
+
+  const handleSubmit = (id) => {
+    const project = projects.find(project => project.id === id);
+    if (project.projectstatus === "" || project.projectstatus === "completed") {
+      toast.dismiss();
+      toast.error('Project is already completed');
+    } else {
+      // Send PATCH request to server with _id and selected option
+      let data = JSON.stringify({
+        "_id": id,
+        "status_p": project.projectstatus
+      });
+
+
+      try {
+        //? api patch req
+        const url = `${process.env.REACT_APP_BACKEND_URL}paper/update`;
+        const requestOptions = {
+          method: 'PATCH',
+          headers: {
+            Authorization: localStorage.getItem('Token'),
+            'Content-Type': 'application/json',
+          },
+          body: data,
+        };
+
+        const fetchPromise = fetch(url, requestOptions);
+
+        toast.promise(
+          fetchPromise,
+          {
+            pending: 'Updating project...',
+            success: 'Project updated successfully',
+            error: 'Error updating project'
+          }
+        );
+
+        fetchPromise
+          .then((response) => {
+            if (response.status == 200) {
+              console.log('updated successfully');
+            }
+            setData(prevData => prevData.filter(paper => paper._id !== id));
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            toast.dismiss();
+            toast.error(`Error updating paper: ${error.message}`);
+          });
+      } catch (error) {
+        console.error('Error:', error);
+        toast.error(`Error updating paper: ${error.message}`);
+      }
+    }
+  };
 
   return (
     <div>
-        <Navbar/>
-        {/* <ProjectHeader/> */}
+      <Navbar />
+      <ProjectHeader />
 
-        <header >
-            <h1 style={styles.pageTitle}>Projects</h1>
-
-            <nav style={styles.nav}>
-                <ul style={styles.navContainer}>
-                    <li style={styles.firstChild}>
-                        <NavLink to="/enterproject"><button className="button-nav">Enter Project</button></NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/project"><button className="button-nav">All Projects</button></NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/submittedproject"><button className="button-nav">Submitted Projects</button></NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/rejectedproject"><button className="button-nav">Rejected Projects</button></NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/ongoingproject"><button className="button-nav">Ongoing Projects</button></NavLink>
-                    </li>
-                    <li style={styles.lastChild}>
-                        <NavLink to="/completedproject"><button className="button-nav-1">Completed Projects</button></NavLink>
-                    </li>
-                    {/* <li style={styles.lastChild}>
-                        <NavLink to="/downloadproject"><button className="button-nav">Download Projects</button></NavLink>
-                    </li> */}
-                </ul>
-            
-            </nav>
-        </header>
-
-        <div className="site-layout" style={{ padding: '0 50px' }}>
+      <div className="site-layout" style={{ padding: '0 50px' }}>
         <div style={{ padding: 24, minHeight: 380 }}>
-        <table>
+          <table>
             <thead>
               <tr>
                 <th>S. No</th>
@@ -352,20 +165,20 @@ function CompletedProjectsPage() {
                       <td className="_status">{data.PI}</td>
                       <td>{data.coPI}</td>
                       <td>{data.amount}</td>
-                      <td>{data.submission_date?data.submission_date.substring(0, 10):''}</td>
-                        <td>{data.approved_date?data.approved_date.substring(0, 10):''}</td>
-                       
-                        <td>{data.start_date?data.start_date.substring(0, 10):''}</td>
-                      <td>{data.completed_date?data.completed_date.substring(0, 10):''}</td>
+                      <td>{data.submission_date ? data.submission_date.substring(0, 10) : ''}</td>
+                      <td>{data.approved_date ? data.approved_date.substring(0, 10) : ''}</td>
+
+                      <td>{data.start_date ? data.start_date.substring(0, 10) : ''}</td>
+                      <td>{data.completed_date ? data.completed_date.substring(0, 10) : ''}</td>
                       <td className="_status">{data.status_p}</td>
-                      <td><select style={styles.dropMenu}  data-id="1" defaultValue={data.status_p} onChange={(e)=>setProjectStatus(e.target.value)}>
-                          <option value="ongoing">Ongoing</option>
-                          <option value="completed">Completed</option>
-                          <option value="rejected">Rejected</option>
-                          <option value="submitted">Submitted</option>
-                          </select>
-                       </td>
-                       <td> <button type="submit" onClick={() => handleOptionChange(data._id, projectstatus)}>Submit</button> </td>
+                      <td><select style={styles.dropMenu} data-id="1" defaultValue={data.status_p} onChange={(e) => handleInputChange(data._id, 'projectstatus', e.target.value)}>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="submitted">Submitted</option>
+                      </select>
+                      </td>
+                      <td> <button type="submit" onClick={() => handleSubmit(data._id)}>Submit</button> </td>
 
 
                     </tr>
@@ -376,9 +189,9 @@ function CompletedProjectsPage() {
               })}
             </tbody>
           </table>
-          </div>
+        </div>
 
-       
+
       </div>
     </div>
   );

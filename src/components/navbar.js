@@ -15,9 +15,10 @@ function Navbar() {
   const [notifications, setNotifications] = useState([]);
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
 
-
   useEffect(() => {
-    fetchPendingAccessRequests();
+    if (localStorage.getItem('role') === 'admin') {
+      fetchPendingAccessRequests();
+    }
   }, []);
 
   const fetchPendingAccessRequests = async () => {
