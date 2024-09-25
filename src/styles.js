@@ -18,7 +18,6 @@ const styles = {
     marginTop: 10,
     marginBottom: 10,
     cursor: 'pointer',
-
   },
 
   pageTitle: {

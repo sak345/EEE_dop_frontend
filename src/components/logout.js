@@ -9,13 +9,13 @@ const LogoutButton = () => {
   const handleLogout = () => {
     // Clear client-side authentication state
     googleLogout();
-    localStorage.removeItem('Token')
-    localStorage.removeItem('email')
-    localStorage.removeItem('name')
-    localStorage.removeItem('userId')
-    localStorage.removeItem('role')
-    localStorage.removeItem('picture')
-
+    // localStorage.removeItem('Token')
+    // localStorage.removeItem('email')
+    // localStorage.removeItem('name')
+    // localStorage.removeItem('userId')
+    // localStorage.removeItem('role')
+    // localStorage.removeItem('picture')
+    localStorage.clear(); // Clear all items in local storage
     // Redirect to the home page
     window.location.href = '/?logout=true'
   }

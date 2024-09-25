@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import GlobalStyles from '../../GlobalStyles';
 import styles from '../../styles';
 import Navbar from '../../components/navbar';
-import { Select, MenuItem, Typography, Box } from '@material-ui/core';
+import { Select, MenuItem, Typography, Box, makeStyles } from '@material-ui/core';
 import SearchBar from '../../components/SearchBar';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Count from '../../components/Count.jsx'
@@ -21,6 +21,7 @@ function AwardsPage() {
     let sheetNames = [...new Set(awards.map(award => award.sheetName))];
     const [selectedSheet, setSelectedSheet] = useState("");
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchAwards()
@@ -33,6 +34,7 @@ function AwardsPage() {
     }, [awards]);
 
     const fetchAwards = async () => {
+        setLoading(true)
         const config = {
             method: "get",
             url: process.env.REACT_APP_BACKEND_URL + "awards",
@@ -46,8 +48,7 @@ function AwardsPage() {
         toast.promise(
             fetchPromise,
             {
-                pending: 'Please wait...',
-                success: 'Data loaded successfully',
+                pending: 'Loading...',
                 error: 'Error in loading data'
             }
         );
@@ -58,6 +59,9 @@ function AwardsPage() {
             })
             .catch((error) => {
                 console.log("Error in reading data", error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
@@ -84,7 +88,7 @@ function AwardsPage() {
     };
 
     return (
-        <div>
+        <div className={loading ? classes.blur : ''}>
             <GlobalStyles />
             <Navbar />
             <header>
@@ -136,15 +140,11 @@ function AwardsPage() {
                         cursor: 'pointer',
                         borderRadius: '12px',
                         marginRight: '55px',
-                        marginBottom: '20px'
+                        marginBottom: '20px',
                     }}>Download</button>
                 </div>}
             </header>
         </div>
-
-
-
-
     );
 }
 

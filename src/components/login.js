@@ -62,16 +62,17 @@ function LogIn() {
           localStorage.setItem('picture', res.data.picture)
           localStorage.setItem('userId', res.data.id)
           setTimeout(() => {
-            localStorage.removeItem('email');
-            localStorage.removeItem('name');
-            localStorage.removeItem('picture');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('Token');
-            localStorage.removeItem('role');
+            // localStorage.removeItem('email');
+            // localStorage.removeItem('name');
+            // localStorage.removeItem('picture');
+            // localStorage.removeItem('userId');
+            // localStorage.removeItem('Token');
+            // localStorage.removeItem('role');
+            localStorage.clear(); // Clear all items in local storage
             setLogged(false);
             // Redirect the user to the login page or refresh the page
             navigate('/', { state: { sessionExpired: true } });
-          }, 60 * 1000 * 60);
+          }, 60 * 1000 * 60); // 1hr session timeout
           return axios.post(process.env.REACT_APP_BACKEND_URL + 'auth/login', {
             email: res.data.email,
           }, {

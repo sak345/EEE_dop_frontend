@@ -13,14 +13,24 @@ import { Typography, Box } from '@material-ui/core';
 import * as XLSX from 'xlsx';
 import Count from '../../components/Count.jsx'
 import ManualAddJournal from './manualAddJournal.jsx';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    blur: {
+        filter: 'blur(5px)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+    },
+}));
 
 function AllJournals() {
-
+    const classes = useStyles();
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedColumns, setSelectedColumns] = useState([
         'SlNo', 'UniqueId', 'Level', 'Authors', 'Article_Title', 'WebLink', 'Scopus', 'Web_Of_Sc', 'PUBMED', 'IEEE', 'Indian_Citation_Index', 'Google_Scholar', 'Year', 'Journal_Name', 'Scopus_Citation', 'WOS_Citation', 'IEEE_Citation', 'ICI_Citation', 'GS_Citation', 'Affiliation', 'Vol_No', 'Issue_No', 'B_Page', 'P_Page', 'SNIP', 'SJR', 'Impact_Factor', 'ISSN', 'ISBN', 'PublicationType', 'owner', 'Actions'
     ]);
+    const [loading, setLoading] = useState(false);
 
     const downloadExcel = () => {
         const filteredData = data.filter(journal =>
@@ -80,7 +90,7 @@ function AllJournals() {
     };
 
     useEffect(() => {
-
+        setLoading(true);
         const config = {
             method: "get",
             url: process.env.REACT_APP_BACKEND_URL + "journals",
@@ -95,7 +105,6 @@ function AllJournals() {
             fetchPromise,
             {
                 pending: 'Please wait...',
-                success: 'Data loaded successfully',
                 error: 'Error in loading data'
             }
         );
@@ -106,7 +115,10 @@ function AllJournals() {
             })
             .catch((error) => {
                 console.log("Error in reading data", error);
-            });
+            })
+            .finally(() => {
+                setLoading(false);
+            })
     }, []);
 
     const filteredData = data.filter(journal =>
@@ -118,7 +130,7 @@ function AllJournals() {
     const dataToDisplay = searchTerm ? filteredData : data;
 
     return (
-        <div>
+        <div className={loading ? classes.blur : ''}>
             <GlobalStyles />
             <Navbar />
             <header>

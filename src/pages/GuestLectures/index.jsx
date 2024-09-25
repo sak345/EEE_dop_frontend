@@ -10,14 +10,26 @@ import AddGuestLectureDialog from './AddGuestLectureDialog';
 import NoDataMessage from '../../components/NoDataMessage.jsx';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    blur: {
+        filter: 'blur(5px)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+    },
+}));
 
 function GuestLecturesPage() {
+    const classes = useStyles();
     const [upcomingLectures, setUpcomingLectures] = useState([]);
     const [pastLectures, setPastLectures] = useState([]);
     const [tabValue, setTabValue] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchLectures = async () => {
+            setLoading(true);
             const config = {
                 method: "get",
                 url: process.env.REACT_APP_BACKEND_URL + "guestLectures",
@@ -30,7 +42,6 @@ function GuestLecturesPage() {
                 fetchPromise,
                 {
                     pending: 'Please wait...',
-                    success: 'Data loaded successfully',
                     error: 'Error in loading data'
                 }
             );
@@ -44,6 +55,9 @@ function GuestLecturesPage() {
                 })
                 .catch((error) => {
                     console.error('Error fetching guest lectures:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
         };
 
@@ -114,7 +128,7 @@ function GuestLecturesPage() {
     };
 
     return (
-        <>
+        <div className={loading ? classes.blur : ''}>
             <GlobalStyles />
             <Navbar />
             <Container>
@@ -151,7 +165,7 @@ function GuestLecturesPage() {
                     )}
                 </Box>
             </Container>
-        </>
+        </div>
     );
 }
 
