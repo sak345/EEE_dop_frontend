@@ -39,17 +39,20 @@ const DownloadProjectsPage = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const responseText = await response.text();
-      if (responseText.success) {
+
+      let parsedResponse;
+      try {
+        parsedResponse = JSON.parse(responseText);
+        toast.dismiss();
+        toast.info(parsedResponse.message);
+        setCsvData("");
+      } catch (error) {
         toast.dismiss();
         toast.success("Fetch complete");
         setCsvData(responseText);
-      } else {
-        toast.dismiss();
-        toast.info(JSON.parse(responseText).message);
-        setCsvData("");
-      }
+      };
+
     } catch (error) {
       console.error('Error:', error);
       toast.error("An error occurred while fetching the data");
