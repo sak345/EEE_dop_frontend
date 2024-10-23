@@ -12,8 +12,8 @@ const DownloadProjectsPage = () => {
   const [status, setStatus] = useState("ongoing");
 
   const handleFetch = async () => {
-    const formattedStartDate = new Date(startDate).toISOString().split('T')[0];;
-    const formattedEndDate = new Date(endDate).toISOString().split('T')[0];;
+    const formattedStartDate = startDate ? new Date(startDate).toISOString().split('T')[0] : null;
+    const formattedEndDate = endDate ? new Date(endDate).toISOString().split('T')[0] : null;
 
     let data = JSON.stringify({
       "start_date": formattedStartDate,
@@ -21,29 +21,34 @@ const DownloadProjectsPage = () => {
       "status": status
     });
 
-    const url = `${process.env.REACT_APP_BACKEND_URL}admin/paper/download`;
+    let url = `${process.env.REACT_APP_BACKEND_URL}admin/paper/download`;
     const token = localStorage.getItem('Token');
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", token);
+    myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
       method: 'POST',
-      headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json'
-      },
-      body: data
+      headers: myHeaders,
+      body: data,
     };
 
     try {
       const response = await fetch(url, requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       const responseText = await response.text();
-      if (JSON.parse(responseText).success === false) {
-        toast.dismiss();
-        toast.info(JSON.parse(responseText).message);
-        setCsvData("");
-      } else {
+      if (responseText.success) {
         toast.dismiss();
         toast.success("Fetch complete");
         setCsvData(responseText);
+      } else {
+        toast.dismiss();
+        toast.info(JSON.parse(responseText).message);
+        setCsvData("");
       }
     } catch (error) {
       console.error('Error:', error);
